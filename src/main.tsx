@@ -1,11 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createHashRouter, RouterProvider } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 
-import App from './App'
-import './index.css'
+import "./index.css";
+import { routes } from "./routes";
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+const router = createHashRouter(routes);
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
   </React.StrictMode>,
-)
+);

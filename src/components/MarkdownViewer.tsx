@@ -1,9 +1,7 @@
-function App() {
+export function MarkdownViewer() {
   return (
     <div>
       <p>todo - Add content to this</p>
     </div>
-  )
+  );
 }
-
-export default App
