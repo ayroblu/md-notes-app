@@ -1,5 +1,5 @@
+import { DropboxHelper } from "./components/DropboxHelper";
 import { ErrorPage } from "./components/ErrorPage";
-import { MarkdownViewer } from "./components/MarkdownViewer";
 import { Root } from "./components/Root";
 
 export const routes = [
@@ -10,7 +10,7 @@ export const routes = [
     children: [
       {
         path: "/",
-        element: <MarkdownViewer />,
+        element: <DropboxHelper />,
       },
     ],
   },

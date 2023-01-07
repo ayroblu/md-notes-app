@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 
-import "./index.css";
+import "./index.module.css";
 import { routes } from "./routes";
 
 const router = createHashRouter(routes);

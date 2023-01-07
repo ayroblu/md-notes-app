@@ -1,6 +1,6 @@
 export type OptionType<T> = None<T> | Some<T>;
 
-export const Option = <T>(value: T | null | undefined): None<T> | Some<T> => {
+export const option = <T>(value: T | null | undefined): None<T> | Some<T> => {
   if (isNotNullOrUndefined(value)) {
     return new Some<T>(value);
   } else {
@@ -15,7 +15,7 @@ export class Some<T> {
   }
 
   map<B>(f: (a: NonNullable<T>) => B | null | undefined): OptionType<B> {
-    return Option(f(this.value as NonNullable<T>));
+    return option(f(this.value as NonNullable<T>));
   }
 
   flatMap<B>(f: (a: NonNullable<T>) => OptionType<B>): OptionType<B> {

@@ -6,7 +6,7 @@ The features of this app:
 
 1. Renders a markdown preview of dropbox content
   - Note this should support custom table of contents side nav
-2. Markdown is editable in VSCode editor (monaco)
+2. Markdown is editable in VSCode editor (monaco) (try vim.wasm first)
 3. Basic functions like clicking checkboxes, may be done without opening markdown source
 
 Step 1: Render a markdown preview of dropbox content
@@ -29,6 +29,9 @@ Implementing OAuth2 for Dropbox
 4. Upon redirecting back to the current page, set auth data in Recoil with an effect that persists it in idb
 5. Given some auth token, fetch a list of files from dropbox -> save in Recoil, show on screen
 
-1. Check if code in url -> run dropbox auth step
-2. Check if refresh token is persisted -> set dropbox object with token and run fetch
-3. Else show button for dropbox
+Webapp design
+-------------
+
+- Dropbox optional? - notion of "accounts" so rather than "fusing" you retain both the dropbox and the on device storage separately?
+- No Dropbox - centered button - Login to Dropbox
+- Has dropbox - left nav, split view (only available on desktop), left and right, logout button

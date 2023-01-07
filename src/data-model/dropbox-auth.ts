@@ -32,9 +32,8 @@ export const dropboxClientState = selector<Dropbox>({
     if (!refreshToken) {
       throw new Error("Dropbox refresh token not found!");
     }
-    // TODO: figure out if persisting access token will save a request here
     const dbxAuth = getDropboxAuth();
-    dbxAuth.setRefreshToken(refreshToken);
+    // dbxAuth.setRefreshToken(refreshToken);
     const accessToken = get(dropboxAccessTokenState);
     if (accessToken) {
       dbxAuth.setAccessToken(accessToken);

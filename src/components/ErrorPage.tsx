@@ -1,7 +1,17 @@
+import { DropboxResponseError } from "dropbox";
+import React from "react";
 import { useRouteError, isRouteErrorResponse } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+
+import {
+  dropboxAccessTokenState,
+  dropboxRefreshTokenState,
+} from "../data-model/dropbox-auth";
 
 export function ErrorPage() {
   const error = useRouteError();
+  useDropboxAuthCatcher();
+
   if (process.env.NODE_ENV !== "production") {
     console.error(error);
   }
@@ -31,4 +41,17 @@ export function NotFoundPage() {
       <p>Sorry, failed to find the page you're looking for</p>
     </div>
   );
+}
+function useDropboxAuthCatcher() {
+  const error = useRouteError();
+  const setRefreshToken = useSetRecoilState(dropboxRefreshTokenState);
+  const setAccessToken = useSetRecoilState(dropboxAccessTokenState);
+  React.useEffect(() => {
+    if (error instanceof DropboxResponseError) {
+      if (error.status === 401) {
+        setRefreshToken(undefined);
+        setAccessToken(undefined);
+      }
+    }
+  }, []);
 }

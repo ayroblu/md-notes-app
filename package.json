@@ -14,12 +14,16 @@
     "idb-keyval": "6.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.4",
     "react-router-dom": "^6.6.1",
-    "recoil": "^0.7.6"
+    "react-syntax-highlighter": "^15.5.0",
+    "recoil": "^0.7.6",
+    "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
+    "@types/react-syntax-highlighter": "^15.5.6",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
     "@vitejs/plugin-react": "^3.0.0",

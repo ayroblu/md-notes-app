@@ -13,6 +13,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --nav-width: 200px;
+  --split-pane-width: calc((100vw - var(--nav-width)) / 2);
+}
+/* https://www.falldowngoboone.com/blog/share-variables-between-javascript-and-css/ */
+:export {
+  /* Keep these as number constants */
+  navWidth: 200;
 }
 
 a {

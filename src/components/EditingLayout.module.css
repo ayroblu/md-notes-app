@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  scroll-snap-type: x mandatory;
+}
+.container > * {
+  flex: 1 0 auto;
+  scroll-snap-align: start;
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+  width: var(--nav-width);
+}
+.pane {
+  width: var(--split-pane-width);
+  overflow: auto;
+  position: relative;
+}
+@media (max-width: 900px) {
+  .pane {
+    width: 100vw;
+  }
+}
+.scrollMask {
+  opacity: 0;
+  background-color: black;
+  transition: opacity 0.1s;
+  position: absolute;
+  inset: 0 0 0 0;
+}
