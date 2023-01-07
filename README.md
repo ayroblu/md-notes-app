@@ -16,3 +16,19 @@ Step 1: Render a markdown preview of dropbox content
 2. Use dropbox SDK to manage files
   - Choice: Use one directory, read all files, or pick any file from dropbox?
 3. Add a markdown to HTML renderer
+
+### Auth
+Implementing OAuth2 for Dropbox
+
+> https://developers.dropbox.com/oauth-guide
+
+1. Split up "Routes" so that you conditionally show routes based on what state you are in
+  - Note that you might want to support "signup and redirect" but in this case we are not a full "login logout" service
+2. Set root route as simple button to add Dropbox + message explaining why
+3. Clicking button takes you to Dropbox
+4. Upon redirecting back to the current page, set auth data in Recoil with an effect that persists it in idb
+5. Given some auth token, fetch a list of files from dropbox -> save in Recoil, show on screen
+
+1. Check if code in url -> run dropbox auth step
+2. Check if refresh token is persisted -> set dropbox object with token and run fetch
+3. Else show button for dropbox

@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
 export function Root() {
@@ -10,7 +11,9 @@ export function Root() {
           </li>
         </ul>
       </nav>
-      <Outlet />
+      <React.Suspense>
+        <Outlet />
+      </React.Suspense>
     </main>
   );
 }
