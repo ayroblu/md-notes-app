@@ -8,6 +8,7 @@
 .container > * {
   flex: 1 0 auto;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 .nav {
   display: flex;
