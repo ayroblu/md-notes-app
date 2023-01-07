@@ -1,7 +1,8 @@
-import type { files as DropboxFiles } from "dropbox";
+import { getVSIFileIcon, getVSIFolderIcon } from "file-extension-icon-js";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
+import type { DropboxFile } from "../../data-model/dropbox";
 import { dropboxFilesState } from "../../data-model/dropbox";
 import { activeFilenameState } from "../../data-model/main";
 import { exhaustiveCheck } from "../../utils/main";
@@ -11,28 +12,29 @@ import { scrollToFirstPane } from "./utils";
 
 export function FileList() {
   const files = useRecoilValue(dropboxFilesState);
+  console.log("files", files);
+  return <FileEntries files={files} />;
+}
+function FileEntries({ files }: { files: DropboxFile[] }) {
   return (
     <ul className={styles.main}>
-      {files.result.entries.map((entry) => {
-        switch (entry[".tag"]) {
+      {files.map((file) => {
+        switch (file.entry[".tag"]) {
           case "file":
           case "folder":
-            return <FileEntry entry={entry} key={entry.id} />;
+            return <FileEntry file={file} key={file.entry.id} />;
           case "deleted":
             return null;
           default:
-            exhaustiveCheck(entry);
+            exhaustiveCheck(file.entry);
             return null;
         }
       })}
     </ul>
   );
 }
-function FileEntry({
-  entry,
-}: {
-  entry: DropboxFiles.ListFolderResult["entries"][number];
-}) {
+function FileEntry({ file: { children, entry } }: { file: DropboxFile }) {
+  const [isFolderOpen, setIsFolderOpen] = React.useState(false);
   const setFilename = useSetRecoilState(activeFilenameState);
   const setFilenameHandler = React.useCallback(() => {
     if (entry.path_lower) {
@@ -40,15 +42,35 @@ function FileEntry({
       scrollToFirstPane({ behavior: "smooth" });
     }
   }, [entry, setFilename]);
+  const toggleOpenHandler = React.useCallback(() => {
+    setIsFolderOpen((v) => !v);
+  }, []);
   switch (entry[".tag"]) {
     case "file":
       return (
-        <li key={entry.id} onClick={setFilenameHandler}>
+        <li className={styles.file} key={entry.id} onClick={setFilenameHandler}>
+          <img alt="js" src={getVSIFileIcon(entry.name)} width="24" />
           {entry.name}
         </li>
       );
     case "folder":
-      return <li key={entry.id}>{entry.name}</li>;
+      ////Open Folder Icon
+      //<img src=`${getVSIFolderIcon('android', 1)}` alt="android" width="24" />
+      return (
+        <>
+          <li className={styles.folder} key={entry.id}>
+            <div className={styles.folderName} onClick={toggleOpenHandler}>
+              <img
+                alt={entry.name}
+                src={getVSIFolderIcon(entry.name, isFolderOpen)}
+                width="24"
+              />
+              {entry.name}
+            </div>
+            {isFolderOpen && <FileEntries files={children} />}
+          </li>
+        </>
+      );
     case "deleted":
       return null;
     default:

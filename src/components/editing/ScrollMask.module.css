@@ -1,0 +1,7 @@
+.scrollMask {
+  opacity: 0;
+  background-color: black;
+  transition: opacity 0.1s;
+  position: absolute;
+  inset: 0 0 0 0;
+}

@@ -53,5 +53,5 @@ function useDropboxAuthCatcher() {
         setAccessToken(undefined);
       }
     }
-  }, []);
+  }, [error, setAccessToken, setRefreshToken]);
 }
