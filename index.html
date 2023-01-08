@@ -46,7 +46,6 @@
       media="(prefers-color-scheme: light)"
       content="#ffffff"
     />
-    <meta name="theme-color" content="242424" />
     <!-- /ios-status-bar -->
     <!-- ios-splash-screen -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,21 +223,32 @@
     />
     <!-- /ios-splash-screen -->
     <title>Markdown Notes App</title>
-    <script type="module" crossorigin src="./assets/index-a07f01cd.js"></script>
-    <link rel="stylesheet" href="./assets/index-42135851.css">
+    <script type="module" crossorigin src="./assets/index-42755a7e.js"></script>
+    <link rel="stylesheet" href="./assets/index-3090cac8.css">
   <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
   <body>
+    <style>
+      body {
+        /* Included in index.module.css, just used for dev purposes */
+        margin: 0;
+      }
+      html {
+        min-height: calc(100% + env(safe-area-inset-top));
+      }
+    </style>
     <div id="root">
       <style>
-        body {
-          margin: 0;
-        }
-        .initial-splash {
-          height: 120vh;
+        #initial-splash {
+          height: 110vh;
           background-color: #323232;
         }
+        @media (prefers-color-scheme: light) {
+          #initial-splash {
+            background-color: #ffffff;
+          }
+        }
       </style>
-      <div class="initial-splash"></div>
+      <div id="initial-splash"></div>
     </div>
     
   </body>
