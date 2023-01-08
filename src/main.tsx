@@ -5,6 +5,7 @@ import { RecoilRoot } from "recoil";
 
 import "./index.module.css";
 import { routes } from "./routes";
+// import "./color-scheme";
 
 const router = createHashRouter(routes);
 

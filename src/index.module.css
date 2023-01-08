@@ -21,6 +21,8 @@
 :export {
   /* Keep these as number constants */
   navWidth: 200;
+  backgroundColorDark: #242424;
+  backgroundColorLight: #ffffff;
 }
 
 a {
@@ -37,6 +39,7 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 h1 {

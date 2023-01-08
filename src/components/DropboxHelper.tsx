@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 
+
 import {
   dropboxCallbackAuthState,
   dropboxRefreshTokenState,
@@ -10,6 +11,7 @@ import {
 } from "../data-model/dropbox-auth";
 import { useStable } from "../hooks/useStable";
 
+import styles from "./DropboxHelper.module.css";
 import { EditingLayout } from "./EditingLayout";
 
 export function DropboxHelper() {
@@ -17,7 +19,7 @@ export function DropboxHelper() {
   if (isAuthed) {
     return <EditingLayout />;
   } else {
-    return <DropboxAuthButton />;
+    return <DropboxAuthScreen />;
   }
 }
 function DropboxCallbackHandler() {
@@ -38,14 +40,14 @@ function DropboxCallbackHandleAuth() {
   }, [navigate, response, setResponse]);
   return null;
 }
-function DropboxAuthButton() {
+function DropboxAuthScreen() {
   const authHandler = React.useCallback(() => {
     runDropboxAuth();
   }, []);
   return (
     <>
       <DropboxCallbackHandler />
-      <div>
+      <div className={styles.container}>
         <h1>Markdown Notes App sync with Dropbox</h1>
         <p>
           This is a Markdown Notes App, where you need to sync with dropbox in

@@ -35,3 +35,15 @@ Webapp design
 - Dropbox optional? - notion of "accounts" so rather than "fusing" you retain both the dropbox and the on device storage separately?
 - No Dropbox - centered button - Login to Dropbox
 - Has dropbox - left nav, split view (only available on desktop), left and right, logout button
+
+Icons
+-----
+Generate favicons with: https://realfavicongenerator.net
+See why with: https://css-tricks.com/favicon-quiz/
+- Use transparent icon with #323232 background
+
+Generate splash screens with: https://progressier.com/pwa-icons-and-ios-splash-screen-generator
+- Use transparent icon
+- No app name text
+
+https://dev.to/oncode/display-your-pwa-website-fullscreen-4776
