@@ -36,7 +36,7 @@
     <meta
       name="theme-color"
       media="(prefers-color-scheme: dark)"
-      content="242424"
+      content="#242424"
     />
     <meta
       name="theme-color"
@@ -220,8 +220,8 @@
     />
     <!-- /ios-splash-screen -->
     <title>Markdown Notes App</title>
-    <script type="module" crossorigin src="./assets/index-42755a7e.js"></script>
-    <link rel="stylesheet" href="./assets/index-3090cac8.css">
+    <script type="module" crossorigin src="./assets/index-6077e7e3.js"></script>
+    <link rel="stylesheet" href="./assets/index-01ec2e53.css">
   <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
   <body>
     <style>
@@ -229,8 +229,10 @@
         /* Included in index.module.css, just used for dev purposes */
         margin: 0;
       }
-      html {
-        min-height: calc(100% + env(safe-area-inset-top));
+      @supports (padding: max(0px)) {
+        html {
+          min-height: calc(100% + env(safe-area-inset-top));
+        }
       }
     </style>
     <div id="root">
