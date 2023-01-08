@@ -4,8 +4,6 @@
   line-height: 24px;
   font-weight: 400;
 
-  min-height: calc(100% + env(safe-area-inset-top));
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
@@ -18,6 +16,11 @@
 
   --nav-width: 200px;
   --split-pane-width: calc((100vw - var(--nav-width)) / 2);
+}
+@supports (padding: max(0px)) {
+  :root {
+    min-height: calc(100% + env(safe-area-inset-top));
+  }
 }
 /* https://www.falldowngoboone.com/blog/share-variables-between-javascript-and-css/ */
 :export {

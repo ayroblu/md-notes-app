@@ -227,8 +227,10 @@
         /* Included in index.module.css, just used for dev purposes */
         margin: 0;
       }
-      html {
-        min-height: calc(100% + env(safe-area-inset-top));
+      @supports (padding: max(0px)) {
+        html {
+          min-height: calc(100% + env(safe-area-inset-top));
+        }
       }
     </style>
     <div id="root">
