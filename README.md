@@ -47,3 +47,10 @@ Generate splash screens with: https://progressier.com/pwa-icons-and-ios-splash-s
 - No app name text
 
 https://dev.to/oncode/display-your-pwa-website-fullscreen-4776
+
+iOS Safari PWA
+--------------
+https://dev.to/karmasakshi/make-your-pwas-look-handsome-on-ios-1o08
+Use viewport-fit=cover for full screen
+Headers to remove status bar colours
+env vars to fit based on "safe" areas
