@@ -54,3 +54,12 @@ https://dev.to/karmasakshi/make-your-pwas-look-handsome-on-ios-1o08
 Use viewport-fit=cover for full screen
 Headers to remove status bar colours
 env vars to fit based on "safe" areas
+
+
+TODO
+----
+
+- Light dark mode switcher
+- Fix spacing issue on editing layout
+- Setup storybook or similar for testing?
+- New service worker causes empty page bug
