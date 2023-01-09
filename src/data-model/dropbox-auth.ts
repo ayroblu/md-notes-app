@@ -33,7 +33,9 @@ export const dropboxClientState = selector<Dropbox>({
       throw new Error("Dropbox refresh token not found!");
     }
     const dbxAuth = getDropboxAuth();
-    // dbxAuth.setRefreshToken(refreshToken);
+    if (process.env.NODE_ENV === "production") {
+      dbxAuth.setRefreshToken(refreshToken);
+    }
     const accessToken = get(dropboxAccessTokenState);
     if (accessToken) {
       dbxAuth.setAccessToken(accessToken);

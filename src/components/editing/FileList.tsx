@@ -1,9 +1,9 @@
 import { getVSIFileIcon, getVSIFolderIcon } from "file-extension-icon-js";
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import type { DropboxFile } from "../../data-model/dropbox";
-import { dropboxFilesState } from "../../data-model/dropbox";
+import type { DropboxFile} from "../../data-model/dropbox";
+import { dropboxFilesSetState , dropboxFilesState } from "../../data-model/dropbox";
 import { activeFilenameState } from "../../data-model/main";
 import { exhaustiveCheck } from "../../utils/main";
 
@@ -12,8 +12,18 @@ import { scrollToFirstPane } from "./utils";
 
 export function FileList() {
   const files = useRecoilValue(dropboxFilesState);
-  console.log("files", files);
+  useAdjustDropboxFilename();
   return <FileEntries files={files} />;
+}
+function useAdjustDropboxFilename() {
+  const [activeFilename, setActiveFilename] =
+    useRecoilState(activeFilenameState);
+  const filesSet = useRecoilValue(dropboxFilesSetState);
+  React.useLayoutEffect(() => {
+    if (activeFilename && !filesSet.has(activeFilename)) {
+      setActiveFilename(undefined);
+    }
+  }, [activeFilename, filesSet, setActiveFilename]);
 }
 function FileEntries({ files }: { files: DropboxFile[] }) {
   return (

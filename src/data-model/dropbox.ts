@@ -1,21 +1,37 @@
 import type { files } from "dropbox";
 import { selector, selectorFamily } from "recoil";
 
+import { isNonNullable } from "../utils/main";
+
 import { dropboxClientState } from "./dropbox-auth";
 
-export const dropboxFilesState = selector<DropboxFile[]>({
-  key: "dropboxFilesState",
+const dropboxFilesRawState = selector<files.ListFolderResult>({
+  key: "dropboxFilesRawState",
   get: async ({ get }) => {
     const dbx = get(dropboxClientState);
     const response = await dbx.filesListFolder({ path: "", recursive: true });
-    const entries = response.result.entries;
-    return getDropboxFiles(entries);
+    return response.result;
+  },
+});
+export const dropboxFilesState = selector<DropboxFile[]>({
+  key: "dropboxFilesState",
+  get: async ({ get }) => {
+    const result = get(dropboxFilesRawState);
+    return getDropboxFiles(result.entries);
+  },
+});
+export const dropboxFilesSetState = selector<Set<string>>({
+  key: "dropboxFilesSetState",
+  get: async ({ get }) => {
+    const result = get(dropboxFilesRawState);
+    return new Set(
+      result.entries.map(({ path_lower }) => path_lower).filter(isNonNullable),
+    );
   },
 });
 function getIntermediaryGroup(
   entries: files.ListFolderResult["entries"],
 ): Intermediary {
-  console.log("entries", entries);
   return entries.reduce<Intermediary>((map, next) => {
     if (next.path_lower) {
       const sections = next.path_lower.split("/");
