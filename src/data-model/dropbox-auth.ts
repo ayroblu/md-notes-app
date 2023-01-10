@@ -25,7 +25,7 @@ export const dropboxAccessTokenState = atom<string | undefined>({
 //     return !!refreshToken;
 //   },
 // });
-export const dropboxClientState = selector<Dropbox>({
+export const dropboxClientState = selector<() => Dropbox>({
   key: "dropboxClientState",
   get: ({ get }) => {
     const refreshToken = get(dropboxRefreshTokenState);
@@ -33,9 +33,7 @@ export const dropboxClientState = selector<Dropbox>({
       throw new Error("Dropbox refresh token not found!");
     }
     const dbxAuth = getDropboxAuth();
-    if (process.env.NODE_ENV === "production") {
-      dbxAuth.setRefreshToken(refreshToken);
-    }
+    dbxAuth.setRefreshToken(refreshToken);
     const accessToken = get(dropboxAccessTokenState);
     if (accessToken) {
       dbxAuth.setAccessToken(accessToken);
@@ -43,7 +41,7 @@ export const dropboxClientState = selector<Dropbox>({
     const dbx = new Dropbox({
       auth: dbxAuth,
     });
-    return dbx;
+    return () => dbx;
   },
 });
 export const dropboxCallbackAuthState = selector({
