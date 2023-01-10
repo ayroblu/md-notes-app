@@ -10805,6 +10805,13 @@ react-syntax-highlighter@^15.5.0:
     prismjs "^1.27.0"
     refractor "^3.6.0"
 
+react-vim-wasm@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-vim-wasm/-/react-vim-wasm-0.1.4.tgz#bd2e4c29aff1c82c4bd659d1f1104daaad0213b1"
+  integrity sha512-Ly0AZHLrKqLsKNczP7gR5cDtQvC5v5bPs0/i9Wrbf/OCl1oWRxY9wW2V+ejRfMZ8huLlZoHNt9iAx6UDblwlUQ==
+  dependencies:
+    vim-wasm "~0.0.13"
+
 react@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
@@ -12870,6 +12877,11 @@ vfile@^5.0.0:
     is-buffer "^2.0.0"
     unist-util-stringify-position "^3.0.0"
     vfile-message "^3.0.0"
+
+vim-wasm@~0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/vim-wasm/-/vim-wasm-0.0.13.tgz#450a83d1eea7def4d6cf8c863c502b5b771b08ea"
+  integrity sha512-2EkJ4OfMgvA/bURJeu43wqIQ4tpCJymst++Y4R/AKuQlnrvdI4hTpG2jf0yL5TrLt1ui12leLRghrwPOybyu8w==
 
 vite-plugin-pwa@^0.14.1:
   version "0.14.1"

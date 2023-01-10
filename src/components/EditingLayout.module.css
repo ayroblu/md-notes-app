@@ -32,6 +32,8 @@
   width: var(--split-pane-width);
   overflow: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 @media (max-width: 900px) {
   .pane {

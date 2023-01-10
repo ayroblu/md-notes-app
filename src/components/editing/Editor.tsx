@@ -19,12 +19,14 @@ export function Editor() {
 type FileFoundEditorProps = {
   filename: string;
 };
+const LazyVimEditor = React.lazy(() => import("./VimEditor"));
 function FileFoundEditor({ filename }: FileFoundEditorProps) {
   const fileDetails = useRecoilValue(dropboxFileContentsState(filename));
   if (!fileDetails) {
     return <div>File not found</div>;
   } else {
-    return <pre>{fileDetails}</pre>;
+    // return <pre>{fileDetails}</pre>;
+    return <LazyVimEditor />;
   }
 }
 // <h3>Editor</h3>
