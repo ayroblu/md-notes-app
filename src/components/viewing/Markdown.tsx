@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
 
-import { cn } from "../../utils/main";
+import { cn } from "@/utils/main";
 
 import styles from "./Markdown.module.css";
 

@@ -4,7 +4,7 @@ import { useSetRecoilState } from "recoil";
 import {
   dropboxAccessTokenState,
   dropboxRefreshTokenState,
-} from "../data-model/dropbox-auth";
+} from "@/data-model/dropbox-auth";
 
 import styles from "./EditingLayout.module.css";
 import { Editor } from "./editing/Editor";

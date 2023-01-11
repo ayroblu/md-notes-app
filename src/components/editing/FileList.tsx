@@ -2,10 +2,10 @@ import { getVSIFileIcon, getVSIFolderIcon } from "file-extension-icon-js";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import type { DropboxFile} from "../../data-model/dropbox";
-import { dropboxFilesSetState , dropboxFilesState } from "../../data-model/dropbox";
-import { activeFilenameState } from "../../data-model/main";
-import { exhaustiveCheck } from "../../utils/main";
+import type { DropboxFile} from "@/data-model/dropbox";
+import { dropboxFilesSetState , dropboxFilesState } from "@/data-model/dropbox";
+import { activeFilenameState } from "@/data-model/main";
+import { exhaustiveCheck } from "@/utils/main";
 
 import styles from "./FileList.module.css";
 import { scrollToFirstPane } from "./utils";

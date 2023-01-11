@@ -1,8 +1,8 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import { dropboxFileContentsState } from "../../data-model/dropbox";
-import { activeFilenameState } from "../../data-model/main";
+import { dropboxFileContentsState } from "@/data-model/dropbox";
+import { activeFilenameState } from "@/data-model/main";
 
 export function Editor() {
   const filename = useRecoilValue(activeFilenameState);

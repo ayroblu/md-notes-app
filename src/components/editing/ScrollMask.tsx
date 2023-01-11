@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cssConstants } from "../../css-constants";
+import { cssConstants } from "@/css-constants";
 
 import styles from "./ScrollMask.module.css";
 

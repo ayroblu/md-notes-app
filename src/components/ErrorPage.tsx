@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil";
 import {
   dropboxAccessTokenState,
   dropboxRefreshTokenState,
-} from "../data-model/dropbox-auth";
+} from "@/data-model/dropbox-auth";
 
 export function ErrorPage() {
   const error = useRouteError();

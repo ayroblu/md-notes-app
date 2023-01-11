@@ -8,8 +8,8 @@ import {
   dropboxRefreshTokenState,
   hasRedirectedFromAuth,
   runDropboxAuth,
-} from "../data-model/dropbox-auth";
-import { useStable } from "../hooks/useStable";
+} from "@/data-model/dropbox-auth";
+import { useStable } from "@/hooks/useStable";
 
 import styles from "./DropboxHelper.module.css";
 import { EditingLayout } from "./EditingLayout";
