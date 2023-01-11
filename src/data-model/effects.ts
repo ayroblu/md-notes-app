@@ -2,7 +2,7 @@ import { get, set } from "idb-keyval";
 import type { AtomEffect } from "recoil";
 import { DefaultValue } from "recoil";
 
-import { isNonNullable } from "../utils/main";
+import { isNonNullable } from "@/utils/main";
 
 export const syncIdbEffect =
   <T>(dbKey: string): AtomEffect<T> =>

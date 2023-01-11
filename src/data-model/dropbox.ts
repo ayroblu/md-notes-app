@@ -1,7 +1,7 @@
 import type { files } from "dropbox";
 import { selector, selectorFamily } from "recoil";
 
-import { isNonNullable } from "../utils/main";
+import { isNonNullable } from "@/utils/main";
 
 import { dropboxClientState } from "./dropbox-auth";
 
