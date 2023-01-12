@@ -30,6 +30,7 @@ export const dropboxFilesSetState = selector<Set<string>>({
     );
   },
 });
+
 function getIntermediaryGroup(
   entries: files.ListFolderResult["entries"],
 ): Intermediary {

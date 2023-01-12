@@ -26,7 +26,7 @@ function FileFoundEditor({ filename }: FileFoundEditorProps) {
     return <div>File not found</div>;
   } else {
     // return <pre>{fileDetails}</pre>;
-    return <LazyVimEditor />;
+    return <LazyVimEditor contents={fileDetails} filename={filename} />;
   }
 }
 // <h3>Editor</h3>

@@ -63,3 +63,17 @@ TODO
 - Fix spacing issue on editing layout
 - Setup storybook or similar for testing?
 - New service worker causes empty page bug
+- vim mode
+  - Write should persist in dropbox
+    - autocmd on file save to also export
+    - onFileExport of file should save in idb... maybe?
+    - vimdiff commit files?
+      - fetch if file has changed
+      - if file has changed, fetch it and attempt to resolve difference
+      - show a vimdiff?
+      - save the resolution to dropbox (perform the check recursively)
+  - What about local file system?
+  - Quit should not quit
+  - Copy paste
+  - Handle system incompatibility
+- Monaco / VSCode mode

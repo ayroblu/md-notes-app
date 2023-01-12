@@ -37,10 +37,37 @@ export default defineConfig({
           },
         ],
       },
-      workbox: { navigateFallback: null },
+      workbox: {
+        navigateFallback: null,
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) =>
+              ["document", "iframe", "worker"].includes(request.destination),
+            handler: "StaleWhileRevalidate",
+            options: {
+              plugins: [getHeadersPlugin()],
+            },
+          },
+        ],
+      },
       devOptions: {
         enabled: true,
       },
     }),
   ],
 });
+function getHeadersPlugin() {
+  return {
+    handlerWillRespond: async ({ response }) => {
+      const headers = new Headers(response.headers);
+      headers.set("Cross-Origin-Embedder-Policy", "require-corp");
+      headers.set("Cross-Origin-Opener-Policy", "same-origin");
+
+      return new Response(response.body, {
+        headers,
+        status: response.status,
+        statusText: response.statusText,
+      });
+    },
+  };
+}
