@@ -9,3 +9,7 @@ export function cn(
 ): string {
   return args.filter((a) => a).join(" ");
 }
+
+export function entries<V extends object>(value: V): [keyof V, V[keyof V]][] {
+  return Object.entries(value) as any;
+}

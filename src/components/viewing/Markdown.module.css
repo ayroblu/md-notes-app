@@ -1,3 +1,6 @@
+.markdown > * {
+  padding: 0 8px;
+}
 .markdown h1 {
   counter-reset: h2counter;
 

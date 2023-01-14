@@ -25,7 +25,7 @@ export const dropboxAccessTokenState = atom<string | undefined>({
 //     return !!refreshToken;
 //   },
 // });
-export const dropboxClientState = selector<() => Dropbox>({
+export const dropboxClientState = selector<Dropbox>({
   key: "dropboxClientState",
   get: ({ get }) => {
     const refreshToken = get(dropboxRefreshTokenState);
@@ -41,8 +41,9 @@ export const dropboxClientState = selector<() => Dropbox>({
     const dbx = new Dropbox({
       auth: dbxAuth,
     });
-    return () => dbx;
+    return dbx;
   },
+  dangerouslyAllowMutability: true,
 });
 export const dropboxCallbackAuthState = selector({
   key: "dropboxCallbackAuthState",

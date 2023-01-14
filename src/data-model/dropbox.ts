@@ -8,8 +8,7 @@ import { dropboxClientState } from "./dropbox-auth";
 const dropboxFilesRawState = selector<files.ListFolderResult>({
   key: "dropboxFilesRawState",
   get: async ({ get }) => {
-    const dbxGet = get(dropboxClientState);
-    const dbx = dbxGet();
+    const dbx = get(dropboxClientState);
     const response = await dbx.filesListFolder({ path: "", recursive: true });
     return response.result;
   },
@@ -74,8 +73,7 @@ export const dropboxFileContentsState = selectorFamily<string | null, string>({
   get:
     (fileName) =>
     async ({ get }) => {
-      const dbxGet = get(dropboxClientState);
-      const dbx = dbxGet();
+      const dbx = get(dropboxClientState);
       try {
         const response = await dbx.filesDownload({ path: fileName });
         const result = withBlob(response.result);
