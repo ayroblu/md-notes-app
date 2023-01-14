@@ -1,5 +1,5 @@
 import React from "react";
-import { Vim } from "react-vim-wasm";
+import { checkVimWasmIsAvailable, Vim } from "react-vim-wasm";
 import vimWorkletUrl from "vim-wasm/vim.js?url";
 
 import styles from "./VimEditor.module.css";
@@ -36,6 +36,8 @@ export default function VimEditor({
     },
     [filename, onEdit],
   );
+  const errMsg = checkVimWasmIsAvailable();
+  if (errMsg) return <>{errMsg}</>;
   return (
     <div className={styles.container}>
       <Vim

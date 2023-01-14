@@ -1,9 +1,13 @@
-import { getVSIFileIcon, getVSIFolderIcon } from "file-extension-icon-js";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  getIconForFile,
+  getIconForFolder,
+  getIconForOpenFolder,
+} from "vscode-icons-js";
 
-import type { DropboxFile} from "@/data-model/dropbox";
-import { dropboxFilesSetState , dropboxFilesState } from "@/data-model/dropbox";
+import type { DropboxFile } from "@/data-model/dropbox";
+import { dropboxFilesSetState, dropboxFilesState } from "@/data-model/dropbox";
 import { activeFilenameState } from "@/data-model/main";
 import { exhaustiveCheck } from "@/utils/main";
 
@@ -59,21 +63,28 @@ function FileEntry({ file: { children, entry } }: { file: DropboxFile }) {
     case "file":
       return (
         <li className={styles.file} key={entry.id} onClick={setFilenameHandler}>
-          <img alt="js" src={getVSIFileIcon(entry.name)} width="24" />
+          <Icon name={getIconForFile(entry.name) ?? ""} />
           {entry.name}
         </li>
       );
     case "folder":
       ////Open Folder Icon
       //<img src=`${getVSIFolderIcon('android', 1)}` alt="android" width="24" />
+      // <img
+      //   alt={entry.name}
+      //   src={getVSIFolderIcon(entry.name, isFolderOpen)}
+      //   width="24"
+      // />
       return (
         <>
           <li className={styles.folder} key={entry.id}>
             <div className={styles.folderName} onClick={toggleOpenHandler}>
-              <img
-                alt={entry.name}
-                src={getVSIFolderIcon(entry.name, isFolderOpen)}
-                width="24"
+              <Icon
+                name={
+                  isFolderOpen
+                    ? getIconForOpenFolder(entry.name)
+                    : getIconForFolder(entry.name)
+                }
               />
               {entry.name}
             </div>
@@ -87,4 +98,12 @@ function FileEntry({ file: { children, entry } }: { file: DropboxFile }) {
       exhaustiveCheck(entry);
       return null;
   }
+}
+function Icon({ name }: { name: string }) {
+  return (
+    <img
+      src={new URL(`../../assets/icons/${name}`, import.meta.url).href}
+      width="24"
+    />
+  );
 }

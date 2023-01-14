@@ -1,4 +1,6 @@
 import react from "@vitejs/plugin-react";
+import { visualizer } from "rollup-plugin-visualizer";
+import type { PluginOption } from "vite";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -18,7 +20,7 @@ export default defineConfig({
     tsconfigPaths(),
     // https://web.dev/add-manifest/
     VitePWA({
-      registerType: "autoUpdate",
+      // registerType: "autoUpdate",
       manifest: {
         name: "Markdown Notes App",
         short_name: "Md Notes App",
@@ -37,37 +39,49 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
-        navigateFallback: null,
-        runtimeCaching: [
-          {
-            urlPattern: ({ request }) =>
-              ["document", "iframe", "worker"].includes(request.destination),
-            handler: "StaleWhileRevalidate",
-            options: {
-              plugins: [getHeadersPlugin()],
-            },
-          },
-        ],
-      },
+      // workbox: {
+      //   navigateFallback: null,
+      //   runtimeCaching: [
+      //     {
+      //       urlPattern: ({ request }) => {
+      //         console.log(request);
+      //         console.log(request.destination);
+      //         return ["document", "iframe", "worker"].includes(
+      //           request.destination,
+      //         );
+      //       },
+      //       handler: "StaleWhileRevalidate",
+      //       // options: {
+      //       //   plugins: [getHeadersPlugin()],
+      //       // },
+      //     },
+      //   ],
+      // },
+      filename: "sw.ts",
+      srcDir: "src/service-worker",
+      strategies: "injectManifest",
       devOptions: {
         enabled: true,
+        // type: "module",
       },
     }),
+    ...(process.env.NODE_ENV === "production"
+      ? [visualizer() as unknown as PluginOption]
+      : []),
   ],
 });
-function getHeadersPlugin() {
-  return {
-    handlerWillRespond: async ({ response }) => {
-      const headers = new Headers(response.headers);
-      headers.set("Cross-Origin-Embedder-Policy", "require-corp");
-      headers.set("Cross-Origin-Opener-Policy", "same-origin");
+// function getHeadersPlugin() {
+//   return {
+//     handlerWillRespond: async ({ response }) => {
+//       const headers = new Headers(response.headers);
+//       headers.set("Cross-Origin-Embedder-Policy", "require-corp");
+//       headers.set("Cross-Origin-Opener-Policy", "same-origin");
 
-      return new Response(response.body, {
-        headers,
-        status: response.status,
-        statusText: response.statusText,
-      });
-    },
-  };
-}
+//       return new Response(response.body, {
+//         headers,
+//         status: response.status,
+//         statusText: response.statusText,
+//       });
+//     },
+//   };
+// }
