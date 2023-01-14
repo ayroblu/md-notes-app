@@ -12,6 +12,7 @@ import { activeFilenameState } from "@/data-model/main";
 import { exhaustiveCheck } from "@/utils/main";
 
 import styles from "./FileList.module.css";
+import { Icon } from "./Icon";
 import { scrollToFirstPane } from "./utils";
 
 export function FileList() {
@@ -69,12 +70,6 @@ function FileEntry({ file: { children, entry } }: { file: DropboxFile }) {
       );
     case "folder":
       ////Open Folder Icon
-      //<img src=`${getVSIFolderIcon('android', 1)}` alt="android" width="24" />
-      // <img
-      //   alt={entry.name}
-      //   src={getVSIFolderIcon(entry.name, isFolderOpen)}
-      //   width="24"
-      // />
       return (
         <>
           <li className={styles.folder} key={entry.id}>
@@ -98,12 +93,4 @@ function FileEntry({ file: { children, entry } }: { file: DropboxFile }) {
       exhaustiveCheck(entry);
       return null;
   }
-}
-function Icon({ name }: { name: string }) {
-  return (
-    <img
-      src={new URL(`../../assets/icons/${name}`, import.meta.url).href}
-      width="24"
-    />
-  );
 }

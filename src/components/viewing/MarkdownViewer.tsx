@@ -4,8 +4,6 @@ import { useRecoilValue } from "recoil";
 import { dropboxFileContentsState } from "@/data-model/dropbox";
 import { activeFilenameState, editedFileHelper } from "@/data-model/main";
 
-import { Markdown } from "./Markdown";
-
 export function MarkdownViewer() {
   const filename = useRecoilValue(activeFilenameState);
   if (!filename) {
@@ -27,6 +25,7 @@ function FileFoundMarkdownViewer({ filename }: FileFoundMarkdownViewerProps) {
   if (!fileDetails) {
     return <div>File not found</div>;
   } else {
-    return <Markdown text={editFile?.contents ?? fileDetails} />;
+    return <LazyMarkdown text={editFile?.contents ?? fileDetails} />;
   }
 }
+const LazyMarkdown = React.lazy(() => import("./Markdown"));
