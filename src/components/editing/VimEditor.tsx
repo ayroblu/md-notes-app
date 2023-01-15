@@ -37,9 +37,11 @@ export default function VimEditor({
     [filename, onEdit],
   );
   const errMsg = checkVimWasmIsAvailable();
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  useKeydownListener(containerRef);
   if (errMsg) return <>{errMsg}</>;
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={containerRef}>
       <Vim
         className={styles.canvas}
         cmdArgs={cmdArgs}
@@ -68,4 +70,21 @@ imap jk <Esc>l
 
 function basename(input: string): string {
   return input.slice(input.lastIndexOf("/") + 1);
+}
+function useKeydownListener(
+  containerRef: React.MutableRefObject<HTMLElement | null>,
+) {
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const func = (event: KeyboardEvent) => {
+      if (event.metaKey) {
+        event.stopPropagation();
+      }
+    };
+    window.addEventListener("keydown", func, true);
+    return () => {
+      window.removeEventListener("keydown", func, true);
+    };
+  }, [containerRef]);
 }
