@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import {
   dropboxFileContentsState,
-  dropboxUploadFileState,
+  useDropboxFileUpload,
 } from "@/data-model/dropbox";
 import { activeFilenameState, editedFileHelper } from "@/data-model/main";
 
@@ -29,7 +29,7 @@ function FileFoundEditor({ filename }: FileFoundEditorProps) {
   const fileDetails = useRecoilValue(dropboxFileContentsState(filename));
   const editFile = editedFileHelper.useGet(filename);
   const setEditFile = editedFileHelper.useSet(filename);
-  const saveToDropbox = useSetRecoilState(dropboxUploadFileState(filename));
+  const saveToDropbox = useDropboxFileUpload(filename);
   const onEdit = React.useCallback(
     (contents: string) => {
       setEditFile({

@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-import { syncIdbEffect } from "./effects";
+import { syncIdbEffect } from "./idb-effect";
 import { normalisedState } from "./normalised";
 
 export const activeFilenameState = atom<string | undefined>({

@@ -18,6 +18,7 @@ export function ErrorPage() {
   if (isRouteErrorResponse(error) && error.status === 404) {
     return <NotFoundPage />;
   }
+  // TODO: remove indexeddb entries + unregister service worker
 
   return (
     <div>

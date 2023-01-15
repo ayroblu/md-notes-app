@@ -13,7 +13,7 @@ import {
   useSetRecoilState,
 } from "recoil";
 
-import { syncIdbEffect } from "./effects";
+import { syncIdbEffect } from "./idb-effect";
 
 export function normalisedState<K extends SerializableParam, V>(
   name: string,

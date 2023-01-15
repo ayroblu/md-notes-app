@@ -13,3 +13,24 @@ export function cn(
 export function entries<V extends object>(value: V): [keyof V, V[keyof V]][] {
   return Object.entries(value) as any;
 }
+
+export function readContentsOfBlob(blob: Blob): Promise<string | null> {
+  const reader = new FileReader();
+  return new Promise<string | null>((resolve) => {
+    reader.addEventListener(
+      "loadend",
+      () =>
+        resolve(
+          reader.result instanceof ArrayBuffer
+            ? decodeArrayBuffer(reader.result)
+            : reader.result,
+        ),
+      { once: true },
+    );
+    reader.readAsText(blob);
+  });
+}
+export function decodeArrayBuffer(buf: ArrayBuffer): string {
+  const enc = new TextDecoder("utf-8");
+  return enc.decode(buf);
+}

@@ -15,6 +15,7 @@ export const syncIdbEffect =
     );
     onSet(async (newVal, oldVal) => {
       if (newVal === oldVal) return;
+      if (newVal instanceof DefaultValue) return;
 
       await set(dbKey, newVal);
       broadcastUpdate();

@@ -1,7 +1,7 @@
 import { Dropbox, DropboxAuth } from "dropbox";
 import { atom, selector } from "recoil";
 
-import { syncIdbEffect } from "./effects";
+import { syncIdbEffect } from "./idb-effect";
 
 // Dropbox auth based on their Auth guide and their example:
 // https://developers.dropbox.com/oauth-guide

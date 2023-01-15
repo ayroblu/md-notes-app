@@ -1,10 +1,15 @@
 import type { files } from "dropbox";
-import { atomFamily, selector, selectorFamily } from "recoil";
+import {
+  atomFamily,
+  selector,
+  selectorFamily,
+  useRecoilCallback,
+} from "recoil";
 
-import { isNonNullable } from "@/utils/main";
+import { isNonNullable, readContentsOfBlob } from "@/utils/main";
 
 import { dropboxClientState } from "./dropbox-auth";
-import { syncIdbEffect } from "./effects";
+import { syncIdbEffect } from "./idb-effect";
 import { editedFileHelper } from "./main";
 
 const dropboxFilesRawState = selector<files.ListFolderResult>({
@@ -105,47 +110,42 @@ export const dropboxFileContentsState = selectorFamily<string | null, string>({
     (filename) =>
     async ({ get }) => {
       const result = get(dropboxFileDownloadState(filename));
-      const blob = result.fileBlob;
-      const reader = new FileReader();
-      return new Promise<string | null>((resolve) => {
-        reader.addEventListener(
-          "loadend",
-          () =>
-            resolve(
-              reader.result instanceof ArrayBuffer
-                ? decodeArrayBuffer(reader.result)
-                : reader.result,
-            ),
-          { once: true },
+      return readContentsOfBlob(result.fileBlob);
+    },
+});
+export function useDropboxFileUpload(filename: string) {
+  return useRecoilCallback(
+    ({ set, snapshot }) =>
+      async (contents: string) => {
+        const dbx = await snapshot.getPromise(dropboxClientState);
+        const downloadedMetadata = await snapshot.getPromise(
+          dropboxFileDownloadState(filename),
         );
-        reader.readAsText(blob);
-      });
-    },
-});
-function decodeArrayBuffer(buf: ArrayBuffer): string {
-  const enc = new TextDecoder("utf-8");
-  return enc.decode(buf);
-}
-export const dropboxUploadFileState = selectorFamily<string, string>({
-  key: "dropboxUploadFileState",
-  get: (_filename) => () => "",
-  set:
-    (filename) =>
-    async ({ get }) => {
-      const dbx = get(dropboxClientState);
-      const downloadedMetadata = get(dropboxFileDownloadState(filename));
-      const fileDetails = get(editedFileHelper.normState(filename));
-      if (!fileDetails) return console.error("file edits not found");
+        const dropboxContents = await snapshot.getPromise(
+          dropboxFileContentsState(filename),
+        );
+        if (dropboxContents === contents) return; // no change
 
-      const metadata = await dbx.filesGetMetadata({ path: filename });
-      if (metadata.result[".tag"] !== "file")
-        return console.log("expected file metadata");
-      const { contents } = fileDetails;
-      if (
-        downloadedMetadata.content_hash === metadata.result.content_hash ||
-        confirm("File has changed on dropbox, are you sure you want to save?")
-      ) {
-        dbx.filesUpload({ path: filename, contents });
-      }
-    },
-});
+        const metadata = await dbx.filesGetMetadata({ path: filename });
+        if (metadata.result[".tag"] !== "file")
+          return console.log("expected file metadata");
+        if (
+          downloadedMetadata.content_hash === metadata.result.content_hash ||
+          confirm("File has changed on dropbox, are you sure you want to save?")
+        ) {
+          await dbx.filesUpload({
+            path: filename,
+            contents,
+            mode: {
+              ".tag": "update",
+              update: metadata.result.rev,
+            },
+          });
+          const response = await dbx.filesDownload({ path: filename });
+          const result = withBlob(response.result);
+          set(dropboxFileDownloadState(filename), result);
+        }
+      },
+    [filename],
+  );
+}
