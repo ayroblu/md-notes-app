@@ -1,10 +1,7 @@
 import { cssConstants } from "@/css-constants";
 import { option } from "@/utils/option";
 
-// eslint-disable-next-line css-modules/no-unused-class
-import styles from "../EditingLayout.module.css";
-
-function scrollToClass(
+export function scrollToClass(
   className: string,
   options?: Parameters<Element["scrollIntoView"]>[0],
 ) {
@@ -14,9 +11,4 @@ function scrollToClass(
       el.scrollIntoView(options);
     });
   }
-}
-export function scrollToFirstPane(
-  options?: Parameters<Element["scrollIntoView"]>[0],
-) {
-  scrollToClass(styles.pane, options);
 }

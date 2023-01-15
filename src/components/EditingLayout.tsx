@@ -10,12 +10,13 @@ import styles from "./EditingLayout.module.css";
 import { Editor } from "./editing/Editor";
 import { FileList } from "./editing/FileList";
 import { ScrollMask } from "./editing/ScrollMask";
-import { scrollToFirstPane } from "./editing/utils";
+import { scrollToClass } from "./editing/utils";
 import { MarkdownViewer } from "./viewing/MarkdownViewer";
 
 export function EditingLayout() {
   useScrollToFirst();
   const containerRef = React.useRef<HTMLElement | null>(null);
+  useScrollToFirstOnResize(containerRef);
   return (
     <section className={styles.container} ref={containerRef}>
       <nav className={styles.nav}>
@@ -37,6 +38,28 @@ function useScrollToFirst() {
   React.useEffect(() => {
     scrollToFirstPane();
   }, []);
+}
+function useScrollToFirstOnResize(
+  containerRef: React.MutableRefObject<HTMLElement | null>,
+) {
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ro = new ResizeObserver(() => {
+      scrollToFirstPane();
+    });
+
+    ro.observe(container);
+    return () => {
+      ro.unobserve(container);
+    };
+  }, [containerRef]);
+}
+export function scrollToFirstPane(
+  options?: Parameters<Element["scrollIntoView"]>[0],
+) {
+  scrollToClass(styles.pane, options);
 }
 
 function LogoutButton() {

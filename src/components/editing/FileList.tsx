@@ -11,9 +11,10 @@ import { dropboxFilesSetState, dropboxFilesState } from "@/data-model/dropbox";
 import { activeFilenameState } from "@/data-model/main";
 import { exhaustiveCheck } from "@/utils/main";
 
+import { scrollToFirstPane } from "../EditingLayout";
+
 import styles from "./FileList.module.css";
 import { Icon } from "./Icon";
-import { scrollToFirstPane } from "./utils";
 
 export function FileList() {
   const files = useRecoilValue(dropboxFilesState);
