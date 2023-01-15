@@ -1,5 +1,5 @@
 import React from "react";
-import { checkVimWasmIsAvailable, Vim } from "react-vim-wasm";
+import { checkVimWasmIsAvailable, useVim } from "react-vim-wasm";
 import vimWorkletUrl from "vim-wasm/vim.js?url";
 
 import styles from "./VimEditor.module.css";
@@ -9,11 +9,12 @@ type Props = {
   initialContents: string;
   onEdit: (contents: string) => void;
 };
-export default function VimEditor({
-  filename,
-  initialContents,
-  onEdit,
-}: Props) {
+export default function VimEditor(props: Props) {
+  const errMsg = checkVimWasmIsAvailable();
+  if (errMsg) return <>{errMsg}</>;
+  return <VimEditorMain {...props} />;
+}
+function VimEditorMain({ filename, initialContents, onEdit }: Props) {
   const dirs = React.useMemo(() => ["/work"], []);
   filename = basename(filename);
   const filepath = `/work/${filename}`;
@@ -36,23 +37,23 @@ export default function VimEditor({
     },
     [filename, onEdit],
   );
-  const errMsg = checkVimWasmIsAvailable();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   useKeydownListener(containerRef);
-  if (errMsg) return <>{errMsg}</>;
+  const [canvasRef, inputRef, _vim] = useVim({
+    cmdArgs,
+    dirs,
+    files,
+    onError: console.error,
+    onFileExport,
+    onWriteClipboard: navigator.clipboard && navigator.clipboard.writeText,
+    readClipboard: navigator.clipboard && navigator.clipboard.readText,
+    worker: vimWorkletUrl,
+  });
+
   return (
     <div className={styles.container} ref={containerRef}>
-      <Vim
-        className={styles.canvas}
-        cmdArgs={cmdArgs}
-        dirs={dirs}
-        files={files}
-        onError={console.error}
-        onFileExport={onFileExport}
-        onWriteClipboard={navigator.clipboard && navigator.clipboard.writeText}
-        readClipboard={navigator.clipboard && navigator.clipboard.readText}
-        worker={vimWorkletUrl}
-      />
+      <canvas className={styles.canvas} ref={canvasRef} />
+      <input ref={inputRef} />
     </div>
   );
 }
