@@ -12,14 +12,14 @@ const runtimePaths = [
   `${self.registration.scope}favicons`,
   `${self.registration.scope}assets`,
 ];
+const workboxManifest = self.__WB_MANIFEST || [];
+// console.log("manifest", workboxManifest);
 
 // MARK: install
 export function precacheManifest(event: ExtendableEvent) {
   event.waitUntil(handlePrecacheManifest());
 }
 async function handlePrecacheManifest() {
-  const workboxManifest = self.__WB_MANIFEST || [];
-  console.log("manifest", workboxManifest);
   const cacheablePaths = getCacheablePaths(workboxManifest);
   saveRoutes(cacheablePaths);
   const cache = await caches.open(cacheName);
@@ -28,7 +28,7 @@ async function handlePrecacheManifest() {
   const newPaths = cacheablePaths.filter((url) => !cachedUrls.has(url));
 
   for (const path of newPaths) {
-    console.log("new precache path", path);
+    // console.log("new precache path", path);
     const reqUrl = new URL(path);
     await cache.add(reqUrl);
   }
@@ -46,7 +46,6 @@ export function cleanupStaleAssets(event: ExtendableEvent) {
   event.waitUntil(handleRemoveStaleAssets());
 }
 async function handleRemoveStaleAssets() {
-  const workboxManifest = self.__WB_MANIFEST || [];
   const cacheablePathsSet = new Set(getCacheablePaths(workboxManifest));
   const cache = await caches.open(cacheName);
   const cachedRequests = await cache.keys();
@@ -67,7 +66,7 @@ export function proxyFetch(event: FetchEvent) {
   } else if (runtimePaths.some((path) => route.startsWith(path))) {
     event.respondWith(handleRuntimeFetch(event));
   } else {
-    console.log("unhandled route", route);
+    // console.log("unhandled route", route);
   }
 }
 async function handlePrefetch(
