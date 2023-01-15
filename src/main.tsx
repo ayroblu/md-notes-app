@@ -24,6 +24,12 @@ if ("serviceWorker" in navigator) {
       scope: "./",
     },
   );
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshing) return;
+    window.location.reload();
+    refreshing = true;
+  });
 }
 // Inline script uses:
 // if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('./sw.js', { scope: './' })})}
