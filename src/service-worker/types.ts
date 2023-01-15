@@ -1,4 +1,3 @@
-/// <reference lib="webworker" />
 export type {};
 // declare const self: ServiceWorkerGlobalScope;
 
@@ -7,7 +6,7 @@ declare global {
     __WB_MANIFEST?: Array<PrecacheEntry | string>;
   }
 }
-interface PrecacheEntry {
+export interface PrecacheEntry {
   integrity?: string;
   url: string;
   revision?: string | null;

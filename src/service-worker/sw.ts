@@ -1,11 +1,7 @@
-/// <reference lib="webworker" />
 import "./types";
+import { precacheManifest, proxyFetch } from "./main";
+
 declare const self: ServiceWorkerGlobalScope;
-
-console.log("start!");
-// console.log(self.__WB_MANIFEST);
-// import { precacheManifest } from "./main";
-
 // import { precacheAndRoute } from "workbox-precaching";
 // import { registerRoute } from "workbox-routing";
 //
@@ -24,16 +20,7 @@ console.log("start!");
 // };
 // registerRoute(new RegExp("/"), handlerCb);
 
-// self.addEventListener("fetch", (req) => {
-//   console.log("fetch", req);
-// });
-function precacheManifest(event: ExtendableEvent) {
-  event.waitUntil(handlePrecacheManifest());
-}
-async function handlePrecacheManifest() {
-  console.log(self.__WB_MANIFEST || []);
-  // precacheAndRoute(self.__WB_MANIFEST || []);
-}
+self.addEventListener("fetch", proxyFetch);
 
 self.addEventListener("install", precacheManifest);
 // Skip Waiting makes the new service worker the active service worker

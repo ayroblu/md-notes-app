@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import type { PluginOption } from "vite";
 import { defineConfig } from "vite";
+import { ViteMinifyPlugin } from "vite-plugin-minify";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -18,6 +19,8 @@ export default defineConfig({
   plugins: [
     react(),
     tsconfigPaths(),
+    // https://www.npmjs.com/package/html-minifier-terser options
+    ViteMinifyPlugin({}),
     // https://web.dev/add-manifest/
     VitePWA({
       // registerType: "autoUpdate",
@@ -60,9 +63,10 @@ export default defineConfig({
       filename: "sw.ts",
       srcDir: "src/service-worker",
       strategies: "injectManifest",
+      injectRegister: "inline",
       devOptions: {
         enabled: true,
-        // type: "module",
+        type: "module",
       },
     }),
     ...(process.env.NODE_ENV === "production"
