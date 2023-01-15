@@ -30,7 +30,10 @@ async function handlePrecacheManifest() {
   for (const path of newPaths) {
     // console.log("new precache path", path);
     const reqUrl = new URL(path);
-    await cache.add(reqUrl);
+    const res = await fetch(reqUrl);
+    if (res.ok) {
+      await cache.put(reqUrl, addCorpHeaders(res));
+    }
   }
 }
 function saveRoutes(routes: string[]) {
@@ -76,7 +79,7 @@ async function handlePrefetch(
   const cache = await caches.open(cacheName);
   const match = await cache.match(url, { ignoreSearch: true });
   if (match) {
-    return addCorpHeaders(match);
+    return match;
   }
   const res = await fetch(event.request.clone());
   return addCorpHeaders(res);
@@ -99,9 +102,10 @@ async function handleRuntimeFetch(event: FetchEvent) {
   if (match) {
     return match;
   }
-  const response = await fetch(event.request);
+  const res = await fetch(event.request);
+  const response = addCorpHeaders(res);
   cache.put(event.request, response.clone());
-  return addCorpHeaders(response);
+  return response;
 }
 
 // MARK: utils

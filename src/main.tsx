@@ -16,9 +16,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   </React.StrictMode>,
 );
 
-// if ("serviceWorker" in navigator) {
-//   navigator.serviceWorker.register(
-//     import.meta.env.MODE === "production" ? "/sw.js" : "/dev-sw.js?dev-sw",
-//     { type: import.meta.env.MODE === "production" ? "classic" : "module" },
-//   );
-// }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register(
+    import.meta.env.MODE === "production" ? "/sw.js" : "/dev-sw.js?dev-sw",
+    {
+      type: import.meta.env.MODE === "production" ? "classic" : "module",
+      scope: "./",
+    },
+  );
+}
+// Inline script uses:
+// if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('./sw.js', { scope: './' })})}

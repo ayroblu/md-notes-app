@@ -50,7 +50,8 @@ export default defineConfig({
       filename: "sw.ts",
       srcDir: "src/service-worker",
       strategies: "injectManifest",
-      injectRegister: "inline",
+      // uses add event listener load - more complexity?
+      // injectRegister: "inline",
       // devOptions: {
       //   enabled: true,
       //   type: "module",
