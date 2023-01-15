@@ -1,7 +1,10 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { dropboxFileContentsState } from "@/data-model/dropbox";
+import {
+  dropboxFileContentsState,
+  dropboxUploadFileState,
+} from "@/data-model/dropbox";
 import { activeFilenameState, editedFileHelper } from "@/data-model/main";
 
 export function Editor() {
@@ -16,22 +19,26 @@ export function Editor() {
     );
   }
 }
+
+const LazyVimEditor = React.lazy(() => import("./VimEditor"));
+
 type FileFoundEditorProps = {
   filename: string;
 };
-const LazyVimEditor = React.lazy(() => import("./VimEditor"));
 function FileFoundEditor({ filename }: FileFoundEditorProps) {
   const fileDetails = useRecoilValue(dropboxFileContentsState(filename));
   const editFile = editedFileHelper.useGet(filename);
   const setEditFile = editedFileHelper.useSet(filename);
+  const saveToDropbox = useSetRecoilState(dropboxUploadFileState(filename));
   const onEdit = React.useCallback(
     (contents: string) => {
       setEditFile({
         dateEdited: +new Date(),
         contents,
       });
+      saveToDropbox(contents);
     },
-    [setEditFile],
+    [saveToDropbox, setEditFile],
   );
   if (!fileDetails) {
     return <div>File not found</div>;

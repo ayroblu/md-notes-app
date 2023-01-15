@@ -1,9 +1,11 @@
 import type { files } from "dropbox";
-import { selector, selectorFamily } from "recoil";
+import { atomFamily, selector, selectorFamily } from "recoil";
 
 import { isNonNullable } from "@/utils/main";
 
 import { dropboxClientState } from "./dropbox-auth";
+import { syncIdbEffect } from "./effects";
+import { editedFileHelper } from "./main";
 
 const dropboxFilesRawState = selector<files.ListFolderResult>({
   key: "dropboxFilesRawState",
@@ -68,34 +70,82 @@ type Intermediary = {
     children: Intermediary;
   };
 };
-export const dropboxFileContentsState = selectorFamily<string | null, string>({
-  key: "dropboxFileContentsState",
-  get:
-    (fileName) =>
-    async ({ get }) => {
-      const dbx = get(dropboxClientState);
-      try {
-        const response = await dbx.filesDownload({ path: fileName });
-        const result = withBlob(response.result);
-        const blob = result.fileBlob;
-        const reader = new FileReader();
-        return new Promise<string | null>((resolve) => {
-          reader.addEventListener(
-            "loadend",
-            () => resolve(reader.result as string | null),
-            { once: true },
-          );
-          reader.readAsText(blob);
-        });
-      } catch (err) {
-        console.error(err);
-        return null;
-      }
-    },
-});
 // Incorrect types on Dropbox SDK
 function withBlob<T>(item: T): T & { fileBlob: Blob } {
   const adjustedItem = item as T & { fileBlob: Blob };
   if (!adjustedItem.fileBlob) throw new Error("Expected fileBlob on file");
   return adjustedItem;
 }
+
+const dropboxFileDownloadSelectorState = selectorFamily<
+  files.FileMetadata & { fileBlob: Blob },
+  string
+>({
+  key: "dropboxFileDownloadSelectorState",
+  get:
+    (filename) =>
+    async ({ get }) => {
+      const dbx = get(dropboxClientState);
+      const response = await dbx.filesDownload({ path: filename });
+      const result = withBlob(response.result);
+      return result;
+    },
+});
+const dropboxFileDownloadState = atomFamily<
+  files.FileMetadata & { fileBlob: Blob },
+  string
+>({
+  key: "dropboxFileDownloadState",
+  default: (filename) => dropboxFileDownloadSelectorState(filename),
+  effects: (filename) => [syncIdbEffect(`dropboxFileDownload/${filename}`)],
+});
+export const dropboxFileContentsState = selectorFamily<string | null, string>({
+  key: "dropboxFileDownloadSelectorState",
+  get:
+    (filename) =>
+    async ({ get }) => {
+      const result = get(dropboxFileDownloadState(filename));
+      const blob = result.fileBlob;
+      const reader = new FileReader();
+      return new Promise<string | null>((resolve) => {
+        reader.addEventListener(
+          "loadend",
+          () =>
+            resolve(
+              reader.result instanceof ArrayBuffer
+                ? decodeArrayBuffer(reader.result)
+                : reader.result,
+            ),
+          { once: true },
+        );
+        reader.readAsText(blob);
+      });
+    },
+});
+function decodeArrayBuffer(buf: ArrayBuffer): string {
+  const enc = new TextDecoder("utf-8");
+  return enc.decode(buf);
+}
+export const dropboxUploadFileState = selectorFamily<string, string>({
+  key: "dropboxUploadFileState",
+  get: (_filename) => () => "",
+  set:
+    (filename) =>
+    async ({ get }) => {
+      const dbx = get(dropboxClientState);
+      const downloadedMetadata = get(dropboxFileDownloadState(filename));
+      const fileDetails = get(editedFileHelper.normState(filename));
+      if (!fileDetails) return console.error("file edits not found");
+
+      const metadata = await dbx.filesGetMetadata({ path: filename });
+      if (metadata.result[".tag"] !== "file")
+        return console.log("expected file metadata");
+      const { contents } = fileDetails;
+      if (
+        downloadedMetadata.content_hash === metadata.result.content_hash ||
+        confirm("File has changed on dropbox, are you sure you want to save?")
+      ) {
+        dbx.filesUpload({ path: filename, contents });
+      }
+    },
+});

@@ -19,7 +19,7 @@ export function normalisedState<K extends SerializableParam, V>(
   name: string,
   { isPersisted }: { isPersisted?: boolean } = {},
 ) {
-  const normState = atomFamily<V, K>({
+  const normState = atomFamily<V | undefined, K>({
     key: `${name}State`,
     default: undefined,
     effects: isPersisted
@@ -93,5 +93,6 @@ export function normalisedState<K extends SerializableParam, V>(
       );
       return norm;
     },
+    normState,
   };
 }
