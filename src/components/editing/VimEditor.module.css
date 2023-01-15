@@ -14,7 +14,7 @@
 }
 @supports (padding: max(0px)) {
   .container {
-    margin: calc(-1 * env(safe-area-inset-bottom));
+    margin-bottom: calc(-1 * env(safe-area-inset-bottom));
   }
 }
 .canvas {
