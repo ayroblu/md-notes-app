@@ -5,8 +5,14 @@ import {
   dropboxAccessTokenState,
   dropboxRefreshTokenState,
 } from "@/data-model/dropbox-auth";
+import { cn } from "@/utils/main";
 
 import styles from "./EditingLayout.module.css";
+import {
+  useAnimateScroll,
+  useScrollToFirst,
+  useScrollToFirstOnResize,
+} from "./editing-hooks";
 import { Editor } from "./editing/Editor";
 import { FileList } from "./editing/FileList";
 import { ScrollMask } from "./editing/ScrollMask";
@@ -17,6 +23,12 @@ export function EditingLayout() {
   useScrollToFirst();
   const containerRef = React.useRef<HTMLElement | null>(null);
   useScrollToFirstOnResize(containerRef);
+  // const { isParallax, watchingItemRef } = useParallax();
+  const childRef = React.useRef<HTMLDivElement | null>(null);
+  const { isParallax } = useAnimateScroll({
+    containerRef,
+    childRef,
+  });
   return (
     <section className={styles.container} ref={containerRef}>
       <nav className={styles.nav}>
@@ -26,35 +38,21 @@ export function EditingLayout() {
       </nav>
       <div className={styles.pane}>
         <ScrollMask containerRef={containerRef} />
-        <Editor />
+        <div
+          className={cn(
+            styles.parallaxContainer,
+            isParallax ? styles.parallax : undefined,
+          )}
+          ref={childRef}
+        >
+          <Editor />
+        </div>
       </div>
-      <div className={styles.pane}>
+      <div className={cn(styles.pane, styles.markdownPane)}>
         <MarkdownViewer />
       </div>
     </section>
   );
-}
-function useScrollToFirst() {
-  React.useEffect(() => {
-    scrollToFirstPane();
-  }, []);
-}
-function useScrollToFirstOnResize(
-  containerRef: React.MutableRefObject<HTMLElement | null>,
-) {
-  React.useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const ro = new ResizeObserver(() => {
-      scrollToFirstPane();
-    });
-
-    ro.observe(container);
-    return () => {
-      ro.unobserve(container);
-    };
-  }, [containerRef]);
 }
 export function scrollToFirstPane(
   options?: Parameters<Element["scrollIntoView"]>[0],

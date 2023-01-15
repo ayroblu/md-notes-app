@@ -45,3 +45,14 @@
     }
   }
 }
+.markdownPane {
+  background: #242424;
+}
+.parallax {
+  position: fixed;
+  pointer-events: none;
+  inset: 0 0 0 0;
+}
+.parallaxContainer {
+  display: flex;
+}
