@@ -33,7 +33,6 @@ function VimEditorMain({ filename, initialContents, onEdit }: Props) {
       const result = enc.decode(buf);
       if (basename(fullpath) !== filename) return;
       onEdit(result);
-      // console.log("file exported:", fullpath, result);
     },
     [filename, onEdit],
   );
@@ -52,8 +51,8 @@ function VimEditorMain({ filename, initialContents, onEdit }: Props) {
 
   return (
     <div className={styles.container} ref={containerRef}>
-      <canvas className={styles.canvas} ref={canvasRef} />
       <input ref={inputRef} />
+      <canvas className={styles.canvas} ref={canvasRef} />
     </div>
   );
 }
