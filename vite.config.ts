@@ -6,15 +6,17 @@ import { ViteMinifyPlugin } from "vite-plugin-minify";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+const withStatsVis = false;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "",
   server: {
     host: true,
-    // headers: {
-    //   "Cross-Origin-Opener-Policy": "same-origin",
-    //   "Cross-Origin-Embedder-Policy": "require-corp",
-    // },
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+    },
   },
   plugins: [
     react(),
@@ -44,48 +46,18 @@ export default defineConfig({
       },
       // workbox: {
       //   navigateFallback: null,
-      //   runtimeCaching: [
-      //     {
-      //       urlPattern: ({ request }) => {
-      //         console.log(request);
-      //         console.log(request.destination);
-      //         return ["document", "iframe", "worker"].includes(
-      //           request.destination,
-      //         );
-      //       },
-      //       handler: "StaleWhileRevalidate",
-      //       // options: {
-      //       //   plugins: [getHeadersPlugin()],
-      //       // },
-      //     },
-      //   ],
       // },
       filename: "sw.ts",
       srcDir: "src/service-worker",
       strategies: "injectManifest",
       injectRegister: "inline",
-      devOptions: {
-        enabled: true,
-        type: "module",
-      },
+      // devOptions: {
+      //   enabled: true,
+      //   type: "module",
+      // },
     }),
-    ...(process.env.NODE_ENV === "production"
+    ...(process.env.NODE_ENV === "production" && withStatsVis
       ? [visualizer() as unknown as PluginOption]
       : []),
   ],
 });
-// function getHeadersPlugin() {
-//   return {
-//     handlerWillRespond: async ({ response }) => {
-//       const headers = new Headers(response.headers);
-//       headers.set("Cross-Origin-Embedder-Policy", "require-corp");
-//       headers.set("Cross-Origin-Opener-Policy", "same-origin");
-
-//       return new Response(response.body, {
-//         headers,
-//         status: response.status,
-//         statusText: response.statusText,
-//       });
-//     },
-//   };
-// }
