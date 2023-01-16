@@ -100,7 +100,9 @@ async function handleRuntimeFetch(event: FetchEvent) {
     return addCorpHeaders(match);
   }
   const response = await fetch(event.request);
-  cache.put(event.request, response.clone());
+  if (response.ok) {
+    cache.put(event.request, response.clone());
+  }
   return addCorpHeaders(response);
 }
 
