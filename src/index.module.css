@@ -15,7 +15,7 @@
   -webkit-text-size-adjust: 100%;
 
   --nav-width: 200px;
-  --split-pane-width: calc((100vw - var(--nav-width)) / 2);
+  --split-pane-width: calc((100vw - var(--nav-width) * 2) / 2);
 }
 @supports (padding: max(0px)) {
   :root {

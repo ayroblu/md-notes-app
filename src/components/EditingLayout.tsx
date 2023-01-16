@@ -5,6 +5,7 @@ import {
   dropboxAccessTokenState,
   dropboxRefreshTokenState,
 } from "@/data-model/dropbox-auth";
+import { cn } from "@/utils/main";
 
 import styles from "./EditingLayout.module.css";
 import { Editor } from "./editing/Editor";
@@ -28,8 +29,11 @@ export function EditingLayout() {
         <ScrollMask containerRef={containerRef} />
         <Editor />
       </div>
-      <div className={styles.pane}>
+      <div className={cn(styles.pane, styles.viewer)}>
         <MarkdownViewer />
+      </div>
+      <div className={styles.tableOfContents}>
+        <div>Table of contents</div>
       </div>
     </section>
   );
@@ -47,7 +51,9 @@ function useScrollToFirstOnResize(
     if (!container) return;
 
     const ro = new ResizeObserver(() => {
-      scrollToFirstPane();
+      if (container.scrollLeft < 100) {
+        scrollToFirstPane();
+      }
     });
 
     ro.observe(container);

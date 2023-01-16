@@ -77,3 +77,4 @@ TODO
   - Copy paste
   - Handle system incompatibility
 - Monaco / VSCode mode
+- https://github.com/rehypejs/rehype-react

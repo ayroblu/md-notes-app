@@ -2,7 +2,7 @@
   padding: 0 8px;
 }
 .markdown h1 {
-  counter-reset: h2counter;
+  counter-reset: h2counter h3counter h4counter;
 
   margin-block: 0.4em;
   font-size: 2em;
@@ -41,18 +41,39 @@
 .markdown ul ul {
   list-style-type: circle;
 }
+/* .markdown h2:before, */
+/* .markdown h3:before, */
+/* .markdown h4:before { */
+/*   counter-increment: index; */
+/*   content: counters(index, ".", decimal) " "; */
+/* } */
 .markdown h2:before {
-  content: counter(h2counter) ".\0000a0\0000a0";
   counter-increment: h2counter;
+  content: counter(h2counter) " ";
   counter-reset: h3counter;
 }
 .markdown h3:before {
-  content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0";
   counter-increment: h3counter;
+  content: counter(h2counter) "." counter(h3counter) " ";
   counter-reset: h4counter;
 }
 .markdown h4:before {
-  content: counter(h2counter) "." counter(h3counter) "." counter(h4counter)
-    ".\0000a0\0000a0";
   counter-increment: h4counter;
+  content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) " ";
 }
+/* .markdown h2:before { */
+/*   content: counter(h2counter) ".\0000a0\0000a0"; */
+/*   counter-increment: h2counter; */
+/*   counter-reset: h3counter; */
+
+/* } */
+/* .markdown h3:before { */
+/*   content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0"; */
+/*   counter-increment: h3counter; */
+/*   counter-reset: h4counter; */
+/* } */
+/* .markdown h4:before { */
+/*   content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) */
+/*     ".\0000a0\0000a0"; */
+/*   counter-increment: h4counter; */
+/* } */
