@@ -8,6 +8,7 @@ import {
 import { cn } from "@/utils/main";
 
 import styles from "./EditingLayout.module.css";
+import { TableOfContentsNav } from "./TableOfContentsNav";
 import { Editor } from "./editing/Editor";
 import { FileList } from "./editing/FileList";
 import { ScrollMask } from "./editing/ScrollMask";
@@ -33,7 +34,7 @@ export function EditingLayout() {
         <MarkdownViewer />
       </div>
       <div className={styles.tableOfContents}>
-        <div>Table of contents</div>
+        <TableOfContentsNav />
       </div>
     </section>
   );

@@ -5,6 +5,7 @@
   height: 100dvh;
   overflow: auto;
   scroll-snap-type: x mandatory;
+  overflow-wrap: break-word;
 }
 .container > * {
   flex: 1 0 auto;
@@ -36,7 +37,6 @@
 }
 .viewer {
   flex-direction: column;
-  overflow-wrap: break-word;
 }
 @media (max-width: 900px) {
   .pane {
@@ -51,4 +51,7 @@
 }
 .tableOfContents {
   width: var(--nav-width);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
