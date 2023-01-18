@@ -6,7 +6,10 @@ import { RecoilRoot } from "recoil";
 import "./index.module.css";
 import { routes } from "./routes";
 
-const router = createBrowserRouter(routes);
+const customBasename = "/md-notes-app";
+const router = createBrowserRouter(routes, {
+  basename: location.pathname.startsWith(customBasename) ? customBasename : "/",
+});
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
