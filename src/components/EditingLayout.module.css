@@ -50,7 +50,7 @@
   }
 }
 .tableOfContents {
-  width: var(--nav-width);
+  width: var(--toc-width);
   overflow: auto;
   display: flex;
   flex-direction: column;

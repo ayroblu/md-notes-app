@@ -14,8 +14,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --nav-width: 200px;
-  --split-pane-width: calc((100vw - var(--nav-width) * 2) / 2);
+  --nav-width: 250px;
+  --toc-width: 300px;
+  --split-pane-width: calc((100vw - var(--nav-width) - var(--toc-width)) / 2);
 }
 @supports (padding: max(0px)) {
   :root {

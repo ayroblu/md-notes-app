@@ -1,0 +1,30 @@
+.headings {
+  list-style-type: none;
+  padding: 0;
+}
+.h1 {
+  font-size: 1.1rem;
+}
+.h2 {
+  padding-inline-start: 4px;
+  font-size: 1rem;
+}
+.h3 {
+  padding-inline-start: 8px;
+  font-size: 1rem;
+}
+.h4 {
+  padding-inline-start: 12px;
+  font-size: 1rem;
+}
+.h5 {
+  padding-inline-start: 16px;
+  font-size: 1rem;
+}
+.h6 {
+  padding-inline-start: 20px;
+  font-size: 1rem;
+}
+.link {
+  color: currentColor;
+}
