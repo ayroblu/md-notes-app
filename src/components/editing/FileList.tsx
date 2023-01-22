@@ -7,7 +7,11 @@ import {
 } from "vscode-icons-js";
 
 import type { DropboxFile } from "@/data-model/dropbox";
-import { dropboxFilesSetState, dropboxFilesState } from "@/data-model/dropbox";
+import {
+  useListenForFilesUpdate,
+  dropboxFilesSetState,
+  dropboxFilesState,
+} from "@/data-model/dropbox";
 import { activeFilenameState } from "@/data-model/main";
 import { exhaustiveCheck } from "@/utils/main";
 
@@ -19,6 +23,7 @@ import { Icon } from "./Icon";
 export function FileList() {
   const files = useRecoilValue(dropboxFilesState);
   useAdjustDropboxFilename();
+  useListenForFilesUpdate();
   return <FileEntries files={files} />;
 }
 function useAdjustDropboxFilename() {

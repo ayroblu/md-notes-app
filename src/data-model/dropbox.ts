@@ -1,25 +1,154 @@
 import type { files } from "dropbox";
+import React from "react";
 import {
+  atom,
   atomFamily,
   selector,
   selectorFamily,
   useRecoilCallback,
+  useRecoilValue,
+  useResetRecoilState,
 } from "recoil";
 
-import { isNonNullable, readContentsOfBlob } from "@/utils/main";
+import {
+  entries,
+  exhaustiveCheck,
+  isNonNullable,
+  readContentsOfBlob,
+  wait,
+} from "@/utils/main";
 
 import { dropboxClientState } from "./dropbox-auth";
 import { syncIdbEffect } from "./idb-effect";
-import { editedFileHelper } from "./main";
 
-const dropboxFilesRawState = selector<files.ListFolderResult>({
-  key: "dropboxFilesRawState",
+const dropboxFilesRawSelectorState = selector<files.ListFolderResult>({
+  key: "dropboxFilesRawSelectorState",
   get: async ({ get }) => {
     const dbx = get(dropboxClientState);
+    // dbx.filesListFolderLongpoll({cursor: })
     const response = await dbx.filesListFolder({ path: "", recursive: true });
-    return response.result;
+    const entriesList = response.result.entries;
+    let responseResult = response.result;
+    while (responseResult.has_more) {
+      const next = await dbx.filesListFolderContinue({
+        cursor: responseResult.cursor,
+      });
+      responseResult = next.result;
+      entriesList.push(...next.result.entries);
+    }
+    const entries = compactDropboxFiles(entriesList);
+    return {
+      entries,
+      cursor: responseResult.cursor,
+      has_more: false,
+    };
   },
 });
+const dropboxFilesRawState = atom<files.ListFolderResult>({
+  key: "dropboxFilesRawState",
+  default: dropboxFilesRawSelectorState,
+  effects: [syncIdbEffect(`dropboxListFiles`)],
+});
+function useDropboxUpdateFiles() {
+  return useRecoilCallback(
+    ({ set, snapshot }) =>
+      async () => {
+        const dbx = await snapshot.getPromise(dropboxClientState);
+        const result = await snapshot.getPromise(dropboxFilesRawState);
+
+        let responseResult = result;
+        const entriesList = [...result.entries];
+        do {
+          const next = await dbx.filesListFolderContinue({
+            cursor: responseResult.cursor,
+          });
+          responseResult = next.result;
+          entriesList.push(...next.result.entries);
+        } while (responseResult.has_more);
+        const entries = compactDropboxFiles(entriesList);
+        set(dropboxFilesRawState, {
+          cursor: responseResult.cursor,
+          entries,
+          has_more: false,
+        });
+      },
+    [],
+  );
+}
+export async function useListenForFilesUpdate() {
+  const dbx = useRecoilValue(dropboxClientState);
+  const result = useRecoilValue(dropboxFilesRawState);
+  const updateFiles = useDropboxUpdateFiles();
+  React.useEffect(() => {
+    let isActive = true;
+    async function run() {
+      while (isActive) {
+        const response = await dbx.filesListFolderLongpoll({
+          cursor: result.cursor,
+        });
+        if (!isActive) break;
+        if (response.result.changes) {
+          await updateFiles();
+        } else {
+          await wait(2000);
+        }
+        if (response.result.backoff) {
+          await wait(response.result.backoff * 1000);
+        }
+      }
+    }
+    run().catch(console.error);
+    return () => {
+      isActive = false;
+    };
+  });
+}
+function compactDropboxFiles(
+  entries: files.ListFolderResult["entries"],
+): files.ListFolderResult["entries"] {
+  // insert into new array in reverse order then run reverse()
+  const newEntries: typeof entries = [];
+  const seenIdsSet = new Set<string>();
+  for (let i = entries.length - 1; i >= 0; --i) {
+    const entry = entries[i];
+    switch (entry[".tag"]) {
+      case "file":
+        if (
+          seenIdsSet.has(entry.id) ||
+          (entry.path_lower && seenIdsSet.has(entry.path_lower))
+        ) {
+          break;
+        }
+        newEntries.push(entry);
+        seenIdsSet.add(entry.id);
+        if (entry.path_lower) {
+          seenIdsSet.add(entry.path_lower);
+        }
+        break;
+      case "folder":
+        if (
+          seenIdsSet.has(entry.id) ||
+          (entry.path_lower && seenIdsSet.has(entry.path_lower))
+        ) {
+          break;
+        }
+        newEntries.push(entry);
+        seenIdsSet.add(entry.id);
+        if (entry.path_lower) {
+          seenIdsSet.add(entry.path_lower);
+        }
+        break;
+      case "deleted":
+        if (entry.path_lower) {
+          seenIdsSet.add(entry.path_lower);
+        }
+        break;
+      default:
+        exhaustiveCheck(entry);
+    }
+  }
+  return newEntries.reverse();
+}
 export const dropboxFilesState = selector<DropboxFile[]>({
   key: "dropboxFilesState",
   get: async ({ get }) => {

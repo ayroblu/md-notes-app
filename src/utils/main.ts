@@ -34,3 +34,7 @@ export function decodeArrayBuffer(buf: ArrayBuffer): string {
   const enc = new TextDecoder("utf-8");
   return enc.decode(buf);
 }
+
+export function wait(numMillis: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, numMillis));
+}
