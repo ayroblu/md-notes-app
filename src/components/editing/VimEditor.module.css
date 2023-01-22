@@ -12,12 +12,14 @@
   left: 0;
   z-index: -1;
 }
-.container > input + canvas {
-  filter: blur(4px);
-  transition: filter 0.1s;
-}
-.container > input:focus + canvas {
-  filter: blur(0);
+@media (min-width: 901px) {
+  .container > input + canvas {
+    filter: blur(4px);
+    transition: filter 0.1s;
+  }
+  .container > input:focus + canvas {
+    filter: blur(0);
+  }
 }
 @supports (padding: max(0px)) {
   .container {

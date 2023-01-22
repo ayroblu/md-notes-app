@@ -15,7 +15,7 @@
   -webkit-text-size-adjust: 100%;
 
   --nav-width: 250px;
-  --toc-width: 300px;
+  --toc-width: 250px;
   --split-pane-width: calc((100vw - var(--nav-width) - var(--toc-width)) / 2);
 }
 @supports (padding: max(0px)) {

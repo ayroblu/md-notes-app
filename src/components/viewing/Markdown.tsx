@@ -1,28 +1,37 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import type { CodeProps, HeadingProps } from "react-markdown/lib/ast-to-react";
+import { useRecoilValue } from "recoil";
 import remarkGfm from "remark-gfm";
 
+import { markdownReactState } from "@/data-model/markdown";
 import { cn } from "@/utils/main";
 
 import styles from "./Markdown.module.css";
 
 const SyntaxHighlighter = React.lazy(() => import("./SyntaxHighlighter"));
 
+const isUnified = true;
 export const Markdown: React.FC<{ text: string; className?: string }> =
-  React.memo(({ className, text }) => (
-    <ReactMarkdown
-      children={text}
-      className={cn(styles.markdown, className)}
-      components={{
-        code: Code,
-        h2: HeadingRenderer,
-        h3: HeadingRenderer,
-        h4: HeadingRenderer,
-      }}
-      remarkPlugins={[remarkGfm]}
-    />
-  ));
+  React.memo(({ className, text }) =>
+    isUnified ? (
+      <div className={cn(styles.markdown, className)}>
+        <MyReactMarkdown text={text} />
+      </div>
+    ) : (
+      <ReactMarkdown
+        children={text}
+        className={cn(styles.markdown, className)}
+        components={{
+          code: Code,
+          h2: HeadingRenderer,
+          h3: HeadingRenderer,
+          h4: HeadingRenderer,
+        }}
+        remarkPlugins={[remarkGfm]}
+      />
+    ),
+  );
 
 const Code: React.FC<CodeProps> = ({
   children,
@@ -59,3 +68,8 @@ function HeadingRenderer(props: HeadingProps) {
   return React.createElement(`h${props.level}`, { id: slug }, props.children);
 }
 export default Markdown;
+
+export function MyReactMarkdown({ text }: { text: string }) {
+  const Content = useRecoilValue(markdownReactState(text));
+  return Content;
+}

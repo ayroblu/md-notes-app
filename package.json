@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stefanprobst/rehype-extract-toc": "^2.2.0",
     "dropbox": "^10.34.0",
     "idb-keyval": "6.2.0",
     "react": "^18.2.0",
@@ -19,9 +20,11 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-vim-wasm": "^0.1.4",
     "recoil": "^0.7.6",
+    "rehype-autolink-headings": "^6.1.1",
     "rehype-raw": "^6.1.1",
     "rehype-react": "^7.1.1",
     "rehype-sanitize": "^5.0.1",
+    "rehype-slug": "^5.1.0",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "unified": "^10.1.2"
