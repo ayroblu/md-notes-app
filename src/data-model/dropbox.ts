@@ -7,11 +7,9 @@ import {
   selectorFamily,
   useRecoilCallback,
   useRecoilValue,
-  useResetRecoilState,
 } from "recoil";
 
 import {
-  entries,
   exhaustiveCheck,
   isNonNullable,
   readContentsOfBlob,
@@ -25,7 +23,6 @@ const dropboxFilesRawSelectorState = selector<files.ListFolderResult>({
   key: "dropboxFilesRawSelectorState",
   get: async ({ get }) => {
     const dbx = get(dropboxClientState);
-    // dbx.filesListFolderLongpoll({cursor: })
     const response = await dbx.filesListFolder({ path: "", recursive: true });
     const entriesList = response.result.entries;
     let responseResult = response.result;
@@ -75,7 +72,7 @@ function useDropboxUpdateFiles() {
     [],
   );
 }
-export async function useListenForFilesUpdate() {
+export function useListenForFilesUpdate() {
   const dbx = useRecoilValue(dropboxClientState);
   const result = useRecoilValue(dropboxFilesRawState);
   const updateFiles = useDropboxUpdateFiles();

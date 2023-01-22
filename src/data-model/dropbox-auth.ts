@@ -1,5 +1,5 @@
 import { Dropbox, DropboxAuth } from "dropbox";
-import { atom, selector } from "recoil";
+import { atom, DefaultValue, selector } from "recoil";
 
 import { syncIdbEffect } from "./idb-effect";
 
@@ -16,6 +16,11 @@ export const dropboxAccessTokenState = atom<string | undefined>({
   key: "dropboxAccessTokenState",
   default: undefined,
   effects: [syncIdbEffect("dropboxAccessToken")],
+});
+export const dropboxAccessTokenExpiresState = atom<string | undefined>({
+  key: "dropboxAccessTokenExpiresState",
+  default: undefined,
+  effects: [syncIdbEffect("dropboxAccessTokenExpires")],
 });
 // https://github.com/facebookexperimental/Recoil/issues/2152
 // export const dropboxIsAuthedState = selector<boolean>({
@@ -38,6 +43,10 @@ export const dropboxClientState = selector<Dropbox>({
     if (accessToken) {
       dbxAuth.setAccessToken(accessToken);
     }
+    const expires = get(dropboxAccessTokenExpiresState);
+    if (expires && !((expires as any) instanceof DefaultValue)) {
+      dbxAuth.setAccessTokenExpiresAt(new Date(expires));
+    }
     const dbx = new Dropbox({
       auth: dbxAuth,
     });
@@ -57,6 +66,13 @@ export const dropboxCallbackAuthState = selector({
     const accessToken = authResponseResult.access_token;
     if (accessToken) {
       set(dropboxAccessTokenState, accessToken);
+    }
+    const expiresIn = authResponseResult.expires_in;
+    if (expiresIn) {
+      set(
+        dropboxAccessTokenExpiresState,
+        new Date(+new Date() + expiresIn).toISOString(),
+      );
     }
   },
 });
@@ -114,4 +130,5 @@ async function postRedirectDropboxAuth(): Promise<DropboxResponseResult> {
 type DropboxResponseResult = {
   access_token?: string;
   refresh_token?: string;
+  expires_in?: number;
 };
