@@ -17,34 +17,55 @@ import {
 } from "@/utils/main";
 
 import { dropboxClientState } from "./dropbox-auth";
+import type { EffectParams} from "./idb-effect";
 import { syncIdbEffect } from "./idb-effect";
 
-const dropboxFilesRawSelectorState = selector<files.ListFolderResult>({
-  key: "dropboxFilesRawSelectorState",
-  get: async ({ get }) => {
-    const dbx = get(dropboxClientState);
-    const response = await dbx.filesListFolder({ path: "", recursive: true });
-    const entriesList = response.result.entries;
-    let responseResult = response.result;
-    while (responseResult.has_more) {
-      const next = await dbx.filesListFolderContinue({
-        cursor: responseResult.cursor,
-      });
-      responseResult = next.result;
-      entriesList.push(...next.result.entries);
-    }
-    const entries = compactDropboxFiles(entriesList);
-    return {
-      entries,
+// const dropboxFilesRawSelectorState = selector<files.ListFolderResult>({
+//   key: "dropboxFilesRawSelectorState",
+//   get: async ({ get }) => {
+//     const dbx = get(dropboxClientState);
+//     console.log("raw files");
+//     const response = await dbx.filesListFolder({ path: "", recursive: true });
+//     const entriesList = response.result.entries;
+//     let responseResult = response.result;
+//     while (responseResult.has_more) {
+//       const next = await dbx.filesListFolderContinue({
+//         cursor: responseResult.cursor,
+//       });
+//       responseResult = next.result;
+//       entriesList.push(...next.result.entries);
+//     }
+//     const entries = compactDropboxFiles(entriesList);
+//     return {
+//       entries,
+//       cursor: responseResult.cursor,
+//       has_more: false,
+//     };
+//   },
+// });
+async function dropboxFilesRawFetch({ getPromise }: EffectParams) {
+  const dbx = await getPromise(dropboxClientState);
+  console.log("raw files fetch");
+  const response = await dbx.filesListFolder({ path: "", recursive: true });
+  const entriesList = response.result.entries;
+  let responseResult = response.result;
+  while (responseResult.has_more) {
+    const next = await dbx.filesListFolderContinue({
       cursor: responseResult.cursor,
-      has_more: false,
-    };
-  },
-});
+    });
+    responseResult = next.result;
+    entriesList.push(...next.result.entries);
+  }
+  const entries = compactDropboxFiles(entriesList);
+  return {
+    entries,
+    cursor: responseResult.cursor,
+    has_more: false,
+  };
+}
 const dropboxFilesRawState = atom<files.ListFolderResult>({
   key: "dropboxFilesRawState",
-  default: dropboxFilesRawSelectorState,
-  effects: [syncIdbEffect(`dropboxListFiles`)],
+  effects: [syncIdbEffect(`dropboxListFiles`, dropboxFilesRawFetch)],
 });
 function useDropboxUpdateFiles() {
   return useRecoilCallback(
@@ -208,30 +229,43 @@ function withBlob<T>(item: T): T & { fileBlob: Blob } {
   return adjustedItem;
 }
 
-const dropboxFileDownloadSelectorState = selectorFamily<
-  files.FileMetadata & { fileBlob: Blob },
-  string
->({
-  key: "dropboxFileDownloadSelectorState",
-  get:
-    (filename) =>
-    async ({ get }) => {
-      const dbx = get(dropboxClientState);
-      const response = await dbx.filesDownload({ path: filename });
-      const result = withBlob(response.result);
-      return result;
-    },
-});
+// const dropboxFileDownloadSelectorState = selectorFamily<
+//   files.FileMetadata & { fileBlob: Blob },
+//   string
+// >({
+//   key: "dropboxFileDownloadSelectorState",
+//   get:
+//     (filename) =>
+//     async ({ get }) => {
+//       const dbx = get(dropboxClientState);
+//       const response = await dbx.filesDownload({ path: filename });
+//       const result = withBlob(response.result);
+//       return result;
+//     },
+// });
+function dropboxFileDownload(filename: string) {
+  return async ({ getPromise }: EffectParams) => {
+    const dbx = await getPromise(dropboxClientState);
+    const response = await dbx.filesDownload({ path: filename });
+    const result = withBlob(response.result);
+    return result;
+  };
+}
 const dropboxFileDownloadState = atomFamily<
   files.FileMetadata & { fileBlob: Blob },
   string
 >({
   key: "dropboxFileDownloadState",
-  default: (filename) => dropboxFileDownloadSelectorState(filename),
-  effects: (filename) => [syncIdbEffect(`dropboxFileDownload/${filename}`)],
+  // default: (filename) => dropboxFileDownloadSelectorState(filename),
+  effects: (filename) => [
+    syncIdbEffect(
+      `dropboxFileDownload/${filename}`,
+      dropboxFileDownload(filename),
+    ),
+  ],
 });
 export const dropboxFileContentsState = selectorFamily<string | null, string>({
-  key: "dropboxFileDownloadSelectorState",
+  key: "dropboxFileContentsState",
   get:
     (filename) =>
     async ({ get }) => {

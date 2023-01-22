@@ -8,6 +8,7 @@ import {
 import { cn } from "@/utils/main";
 
 import styles from "./EditingLayout.module.css";
+import { ErrorBoundary } from "./ErrorBoundary";
 import { TableOfContentsNav } from "./TableOfContentsNav";
 import { Editor } from "./editing/Editor";
 import { FileList } from "./editing/FileList";
@@ -23,18 +24,26 @@ export function EditingLayout() {
     <section className={styles.container} ref={containerRef}>
       <nav className={styles.nav}>
         <h3>Markdown Notes App</h3>
-        <FileList />
+        <ErrorBoundary>
+          <FileList />
+        </ErrorBoundary>
         <LogoutButton />
       </nav>
       <div className={styles.pane}>
         <ScrollMask containerRef={containerRef} />
-        <Editor />
+        <ErrorBoundary>
+          <Editor />
+        </ErrorBoundary>
       </div>
       <div className={cn(styles.pane, styles.viewer)}>
-        <MarkdownViewer />
+        <ErrorBoundary>
+          <MarkdownViewer />
+        </ErrorBoundary>
       </div>
       <div className={styles.tableOfContents}>
-        <TableOfContentsNav />
+        <ErrorBoundary>
+          <TableOfContentsNav />
+        </ErrorBoundary>
       </div>
     </section>
   );

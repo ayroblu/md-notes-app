@@ -1,16 +1,29 @@
 import { get, set } from "idb-keyval";
-import type { AtomEffect } from "recoil";
+import type { AtomEffect, RecoilValue } from "recoil";
 import { DefaultValue } from "recoil";
 
 import { isNonNullable } from "@/utils/main";
 
+export type EffectParams = {
+  getPromise: <S>(recoilValue: RecoilValue<S>) => Promise<S>;
+};
 export const syncIdbEffect =
-  <T>(dbKey: string): AtomEffect<T> =>
-  ({ onSet, setSelf }) => {
+  <T>(
+    dbKey: string,
+    defaultFunc?: (params: EffectParams) => Promise<T>,
+  ): AtomEffect<T> =>
+  ({ getPromise, onSet, setSelf }) => {
     const { broadcastUpdate, listenToUpdates } = getBroadcastHelper(dbKey);
     setSelf(
       get(dbKey).then((savedVal: T | null) =>
-        isNonNullable(savedVal) ? savedVal : new DefaultValue(),
+        isNonNullable(savedVal)
+          ? savedVal
+          : defaultFunc
+          ? defaultFunc({ getPromise }).then((value) => {
+              set(dbKey, value);
+              return value;
+            })
+          : new DefaultValue(),
       ),
     );
     onSet(async (newVal, oldVal) => {
