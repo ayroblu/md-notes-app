@@ -1,10 +1,11 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import {
   dropboxAccessTokenState,
   dropboxRefreshTokenState,
 } from "@/data-model/dropbox-auth";
+import { activeFilenameState } from "@/data-model/main";
 import { cn } from "@/utils/main";
 
 import styles from "./EditingLayout.module.css";
@@ -20,6 +21,7 @@ export function EditingLayout() {
   useScrollToFirst();
   const containerRef = React.useRef<HTMLElement | null>(null);
   useScrollToFirstOnResize(containerRef);
+  const filename = useRecoilValue(activeFilenameState);
   return (
     <section className={styles.container} ref={containerRef}>
       <nav className={styles.nav}>
@@ -31,17 +33,17 @@ export function EditingLayout() {
       </nav>
       <div className={styles.pane}>
         <ScrollMask containerRef={containerRef} />
-        <ErrorBoundary>
+        <ErrorBoundary key={filename}>
           <Editor />
         </ErrorBoundary>
       </div>
       <div className={cn(styles.pane, styles.viewer)}>
-        <ErrorBoundary>
+        <ErrorBoundary key={filename}>
           <MarkdownViewer />
         </ErrorBoundary>
       </div>
       <div className={styles.tableOfContents}>
-        <ErrorBoundary>
+        <ErrorBoundary key={filename}>
           <TableOfContentsNav />
         </ErrorBoundary>
       </div>
