@@ -20,19 +20,21 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 );
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register(
-    import.meta.env.MODE === "production" ? "./sw.js" : "./dev-sw.js?dev-sw",
-    {
-      type: import.meta.env.MODE === "production" ? "classic" : "module",
-      scope: "./",
-    },
-  );
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (refreshing) return;
-    window.location.reload();
-    refreshing = true;
-  });
+  if (import.meta.env.MODE === "production") {
+    navigator.serviceWorker.register(
+      import.meta.env.MODE === "production" ? "./sw.js" : "./dev-sw.js?dev-sw",
+      {
+        type: import.meta.env.MODE === "production" ? "classic" : "module",
+        scope: "./",
+      },
+    );
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshing) return;
+      window.location.reload();
+      refreshing = true;
+    });
+  }
 }
 // Inline script uses:
 // if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('./sw.js', { scope: './' })})}

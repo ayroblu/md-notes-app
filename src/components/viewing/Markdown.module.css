@@ -1,6 +1,9 @@
 .markdown > * {
   padding: 0 8px;
 }
+.markdown > pre {
+  padding: 0;
+}
 .markdown h1 {
   counter-reset: h2counter h3counter h4counter;
 

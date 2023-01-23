@@ -18,11 +18,12 @@ export const SyntaxHighlighter: React.FC<Props> = ({
     children={String(children).replace(/\n$/, "")}
     codeTagProps={{ className: styles.code }}
     customStyle={{
-      padding: "3px 6px",
+      padding: "4px 8px",
       margin: "4px 0",
       lineHeight: "inherit",
       fontSize: "0.9em",
       border: "none",
+      ...style,
     }}
     language={language}
     style={xonokai}
