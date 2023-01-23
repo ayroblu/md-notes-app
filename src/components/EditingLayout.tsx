@@ -87,7 +87,7 @@ function useScrollToFirstOnResize(
 export function scrollToFirstPane(
   options?: Parameters<Element["scrollIntoView"]>[0],
 ) {
-  scrollToClass(styles.viewer, options);
+  scrollToClass(styles.pane, options);
 }
 
 function LogoutButton() {
