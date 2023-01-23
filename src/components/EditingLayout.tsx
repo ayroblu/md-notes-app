@@ -1,6 +1,7 @@
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
+import { cssConstants } from "@/css-constants";
 import {
   dropboxAccessTokenState,
   dropboxRefreshTokenState,
@@ -32,12 +33,21 @@ export function EditingLayout() {
         <LogoutButton />
       </nav>
       <div className={styles.pane}>
-        <ScrollMask containerRef={containerRef} />
+        <ScrollMask
+          containerRef={containerRef}
+          direction="left"
+          distance={cssConstants.navWidth}
+        />
         <ErrorBoundary key={filename}>
           <Editor />
         </ErrorBoundary>
       </div>
       <div className={cn(styles.pane, styles.viewer)}>
+        <ScrollMask
+          containerRef={containerRef}
+          direction="right"
+          distance={cssConstants.tocWidth}
+        />
         <ErrorBoundary key={filename}>
           <MarkdownViewer />
         </ErrorBoundary>

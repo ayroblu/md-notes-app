@@ -26,7 +26,8 @@
 /* https://www.falldowngoboone.com/blog/share-variables-between-javascript-and-css/ */
 :export {
   /* Keep these as number constants */
-  navWidth: 200;
+  navWidth: 250;
+  tocWidth: 250;
   backgroundColorDark: #242424;
   backgroundColorLight: #ffffff;
 }
