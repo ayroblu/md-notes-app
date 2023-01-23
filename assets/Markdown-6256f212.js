@@ -1,0 +1,1 @@
+import{R as t,j as o,c as e,b as s,m as c}from"./index-14df3880.js";const r="_markdown_el777_1",d={markdown:r},w=t.memo(({className:n,text:a})=>o("div",{className:e(d.markdown,n),children:o(m,{text:a})}));function m({text:n}){return s(c(n))}export{w as Markdown,m as MyReactMarkdown,w as default};
