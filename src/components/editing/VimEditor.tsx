@@ -39,13 +39,17 @@ function VimEditorMain({ filename, initialContents, onEdit }: Props) {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   useKeydownListener(containerRef);
   const [canvasRef, inputRef, _vim] = useVim({
+    debug: true,
     cmdArgs,
+    clipboard: true,
     dirs,
     files,
     onError: console.error,
     onFileExport,
-    onWriteClipboard: navigator.clipboard && navigator.clipboard.writeText,
-    readClipboard: navigator.clipboard && navigator.clipboard.readText,
+    onWriteClipboard: async (text: string) => {
+      navigator.clipboard.writeText(text);
+    },
+    readClipboard: async () => navigator.clipboard.readText(),
     worker: vimWorkletUrl,
   });
 
