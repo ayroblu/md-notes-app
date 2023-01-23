@@ -1,6 +1,9 @@
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import { Prism } from "react-syntax-highlighter";
-import { xonokai } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+  oneLight,
+  oneDark,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import styles from "./SyntaxHighlighter.module.css";
 
@@ -26,9 +29,10 @@ export const SyntaxHighlighter: React.FC<Props> = ({
       ...style,
     }}
     language={language}
-    style={xonokai}
+    style={isLight ? oneLight : oneDark}
     wrapLongLines
     {...props}
   />
 );
+const isLight = false;
 export default SyntaxHighlighter;
