@@ -24,6 +24,9 @@
 @supports (padding: max(0px)) {
   .container {
     margin-bottom: calc(-1 * env(safe-area-inset-bottom));
+    margin-top: calc(-1 * env(safe-area-inset-top));
+    /* one dark background color */
+    border-top: env(safe-area-inset-top) solid #24272d;
   }
 }
 .canvas {
