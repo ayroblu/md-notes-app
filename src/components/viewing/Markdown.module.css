@@ -30,6 +30,24 @@
   margin-block: 0.05em;
   font-size: 0.67em;
 }
+
+@supports (padding: max(0px)) {
+  /* https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header#comment35938312_13184714 */
+  .markdown h1[id]:before,
+  .markdown h2[id]:before,
+  .markdown h3[id]:before,
+  .markdown h4[id]:before,
+  .markdown h5[id]:before,
+  .markdown h6[id]:before {
+    content: "";
+    display: block;
+    position: relative;
+    width: 0;
+    height: env(safe-area-inset-top);
+    margin-top: calc(-1 * env(safe-area-inset-top));
+  }
+}
+
 .markdown p {
   margin-block: 0.5em;
 }
