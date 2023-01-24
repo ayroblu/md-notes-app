@@ -38,3 +38,19 @@ export function decodeArrayBuffer(buf: ArrayBuffer): string {
 export function wait(numMillis: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, numMillis));
 }
+export function orderBy<T>(
+  funcs: ((t: T) => Date | boolean | number | string)[],
+  order: ("asc" | "desc")[],
+) {
+  return (a: T, b: T) => {
+    for (let i = 0; i < funcs.length; ++i) {
+      const func = funcs[i]!;
+      if (func(a) > func(b)) {
+        return order[i] === "desc" ? -1 : 1;
+      } else if (func(b) > func(a)) {
+        return order[i] === "desc" ? 1 : -1;
+      }
+    }
+    return 0;
+  };
+}

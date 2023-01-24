@@ -12,12 +12,13 @@ import {
 import {
   exhaustiveCheck,
   isNonNullable,
+  orderBy,
   readContentsOfBlob,
   wait,
 } from "@/utils/main";
 
 import { dropboxClientState } from "./dropbox-auth";
-import type { EffectParams} from "./idb-effect";
+import type { EffectParams } from "./idb-effect";
 import { syncIdbEffect } from "./idb-effect";
 
 // const dropboxFilesRawSelectorState = selector<files.ListFolderResult>({
@@ -171,7 +172,13 @@ export const dropboxFilesState = selector<DropboxFile[]>({
   key: "dropboxFilesState",
   get: async ({ get }) => {
     const result = get(dropboxFilesRawState);
-    return getDropboxFiles(result.entries);
+    const files = getDropboxFiles(result.entries);
+    return files.sort(
+      orderBy(
+        [(file) => file.entry[".tag"] === "file", (file) => file.entry.name],
+        ["asc", "asc"],
+      ),
+    );
   },
 });
 export const dropboxFilesSetState = selector<Set<string>>({
