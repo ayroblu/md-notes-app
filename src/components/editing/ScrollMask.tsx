@@ -21,11 +21,11 @@ export function ScrollMask({
   const isMobile = useIsMobile();
 
   React.useEffect(() => {
-    let animationId = 0;
     const container = containerRef.current;
     if (!container) return;
     if (!isMobile) return;
 
+    let animationId = 0;
     const func = () => {
       window.cancelAnimationFrame(animationId);
       animationId = window.requestAnimationFrame(() => {
