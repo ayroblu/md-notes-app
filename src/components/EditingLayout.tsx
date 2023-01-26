@@ -7,11 +7,13 @@ import {
   dropboxRefreshTokenState,
 } from "@/data-model/dropbox-auth";
 import { activeFilenameState } from "@/data-model/main";
+import { getViewerExtensionInfo } from "@/data-model/mimetypes";
 import { cn } from "@/utils/main";
 
 import styles from "./EditingLayout.module.css";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { TableOfContentsNav } from "./TableOfContentsNav";
+import { Viewer } from "./Viewer";
 import { Editor } from "./editing/Editor";
 import { FileList } from "./editing/FileList";
 import { ScrollMask } from "./editing/ScrollMask";
@@ -23,6 +25,7 @@ export function EditingLayout() {
   const containerRef = React.useRef<HTMLElement | null>(null);
   useScrollToFirstOnResize(containerRef);
   const filename = useRecoilValue(activeFilenameState);
+  const isViewer = filename ? !!getViewerExtensionInfo(filename) : false;
   return (
     <section className={styles.container} ref={containerRef}>
       <nav className={styles.nav}>
@@ -32,31 +35,46 @@ export function EditingLayout() {
         </ErrorBoundary>
         <LogoutButton />
       </nav>
-      <div className={styles.pane}>
-        <ScrollMask
-          containerRef={containerRef}
-          direction="left"
-          distance={cssConstants.navWidth}
-        />
-        <ErrorBoundary key={filename}>
-          <Editor />
-        </ErrorBoundary>
-      </div>
-      <div className={cn(styles.pane, styles.viewer)}>
-        <ScrollMask
-          containerRef={containerRef}
-          direction="right"
-          distance={cssConstants.tocWidth}
-        />
-        <ErrorBoundary key={filename}>
-          <MarkdownViewer />
-        </ErrorBoundary>
-      </div>
-      <div className={styles.tableOfContents}>
-        <ErrorBoundary key={filename}>
-          <TableOfContentsNav />
-        </ErrorBoundary>
-      </div>
+      {filename && isViewer ? (
+        <div className={cn(styles.pane, styles.viewerPane)}>
+          <ScrollMask
+            containerRef={containerRef}
+            direction="left"
+            distance={cssConstants.navWidth}
+          />
+          <ErrorBoundary key={filename}>
+            <Viewer filename={filename} />
+          </ErrorBoundary>
+        </div>
+      ) : (
+        <>
+          <div className={styles.pane}>
+            <ScrollMask
+              containerRef={containerRef}
+              direction="left"
+              distance={cssConstants.navWidth}
+            />
+            <ErrorBoundary key={filename}>
+              <Editor />
+            </ErrorBoundary>
+          </div>
+          <div className={cn(styles.pane, styles.viewer)}>
+            <ScrollMask
+              containerRef={containerRef}
+              direction="right"
+              distance={cssConstants.tocWidth}
+            />
+            <ErrorBoundary key={filename}>
+              <MarkdownViewer />
+            </ErrorBoundary>
+          </div>
+          <div className={styles.tableOfContents}>
+            <ErrorBoundary key={filename}>
+              <TableOfContentsNav />
+            </ErrorBoundary>
+          </div>
+        </>
+      )}
     </section>
   );
 }

@@ -17,6 +17,7 @@
   --nav-width: 250px;
   --toc-width: 250px;
   --split-pane-width: calc((100vw - var(--nav-width) - var(--toc-width)) / 2);
+  --viewer-pane-width: calc(100vw - var(--nav-width));
 }
 @supports (padding: max(0px)) {
   :root {

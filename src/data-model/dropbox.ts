@@ -20,6 +20,7 @@ import {
 import { dropboxClientState } from "./dropbox-auth";
 import type { EffectParams } from "./idb-effect";
 import { syncIdbEffect } from "./idb-effect";
+import { getViewerExtensionInfo } from "./mimetypes";
 
 // const dropboxFilesRawSelectorState = selector<files.ListFolderResult>({
 //   key: "dropboxFilesRawSelectorState",
@@ -270,6 +271,19 @@ const dropboxFileDownloadState = atomFamily<
       dropboxFileDownload(filename),
     ),
   ],
+});
+export const dropboxFileBlobUrlState = selectorFamily<string, string>({
+  key: "dropboxFileBlobUrlState",
+  get:
+    (filename) =>
+    async ({ get }) => {
+      const result = get(dropboxFileDownloadState(filename));
+      const mimetype = getViewerExtensionInfo(filename)?.mimetype;
+      const blob = mimetype
+        ? result.fileBlob.slice(0, result.fileBlob.size, mimetype)
+        : result.fileBlob;
+      return URL.createObjectURL(blob);
+    },
 });
 export const dropboxFileContentsState = selectorFamily<string | null, string>({
   key: "dropboxFileContentsState",
