@@ -1,6 +1,10 @@
 import React from "react";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 
+import { cn } from "@/utils/main";
+
+import styles from "./Code.module.css";
+
 const SyntaxHighlighter = React.lazy(() => import("./SyntaxHighlighter"));
 
 export const Code: React.FC<CodeProps> = ({
@@ -37,7 +41,7 @@ export const CodeWithSyntax: React.FC<
       />
     </React.Suspense>
   ) : (
-    <code className={className} {...props}>
+    <code className={cn(styles.code, className)} {...props}>
       {children}
     </code>
   );

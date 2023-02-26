@@ -32,7 +32,6 @@ const preprocessor = unified()
       ],
     },
   })
-
   .use(rehypeSlug)
   .use(rehypeAutolinkHeadings, { behavior: "append" });
 const reactProcessor = preprocessor.use(rehypeReact, {

@@ -3,6 +3,8 @@
 }
 .markdown > pre {
   padding: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .markdown h1 {
   counter-reset: h2counter h3counter h4counter;
