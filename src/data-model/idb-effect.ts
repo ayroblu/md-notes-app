@@ -1,4 +1,4 @@
-import { get, set } from "idb-keyval";
+import * as idb from "idb-keyval";
 import type { AtomEffect, RecoilValue } from "recoil";
 import { DefaultValue } from "recoil";
 
@@ -15,12 +15,12 @@ export const syncIdbEffect =
   ({ getPromise, onSet, setSelf }) => {
     const { broadcastUpdate, listenToUpdates } = getBroadcastHelper(dbKey);
     setSelf(
-      get(dbKey).then((savedVal: T | null) =>
+      idb.get(dbKey).then((savedVal: T | null) =>
         isNonNullable(savedVal)
           ? savedVal
           : defaultFunc
           ? defaultFunc({ getPromise }).then((value) => {
-              set(dbKey, value);
+              idb.set(dbKey, value);
               return value;
             })
           : new DefaultValue(),
@@ -30,12 +30,12 @@ export const syncIdbEffect =
       if (newVal === oldVal) return;
       if (newVal instanceof DefaultValue) return;
 
-      await set(dbKey, newVal);
+      await idb.set(dbKey, newVal);
       broadcastUpdate();
     });
     const dispose = listenToUpdates(async ({ message }) => {
       if (message === SyncIdbMessagesEnum.update) {
-        const result: T | undefined = await get(dbKey);
+        const result: T | undefined = await idb.get(dbKey);
         result !== undefined && setSelf(result);
       }
     });

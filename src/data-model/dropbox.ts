@@ -171,7 +171,7 @@ function compactDropboxFiles(
 }
 export const dropboxFilesState = selector<DropboxFile[]>({
   key: "dropboxFilesState",
-  get: async ({ get }) => {
+  get: ({ get }) => {
     const result = get(dropboxFilesRawState);
     const files = getDropboxFiles(result.entries);
     return files.sort(
@@ -184,7 +184,7 @@ export const dropboxFilesState = selector<DropboxFile[]>({
 });
 export const dropboxFilesSetState = selector<Set<string>>({
   key: "dropboxFilesSetState",
-  get: async ({ get }) => {
+  get: ({ get }) => {
     const result = get(dropboxFilesRawState);
     return new Set(
       result.entries.map(({ path_lower }) => path_lower).filter(isNonNullable),
@@ -260,7 +260,7 @@ function dropboxFileDownload(filename: string) {
   };
 }
 const dropboxFileDownloadState = atomFamily<
-  files.FileMetadata & { fileBlob: Blob },
+  files.FileMetadata & { fileBlob: Blob; fileBlobContents?: string | null },
   string
 >({
   key: "dropboxFileDownloadState",
@@ -276,7 +276,7 @@ export const dropboxFileBlobUrlState = selectorFamily<string, string>({
   key: "dropboxFileBlobUrlState",
   get:
     (filename) =>
-    async ({ get }) => {
+    ({ get }) => {
       const result = get(dropboxFileDownloadState(filename));
       const mimetype = getViewerExtensionInfo(filename)?.mimetype;
       const blob = mimetype
@@ -289,9 +289,9 @@ export const dropboxFileContentsState = selectorFamily<string | null, string>({
   key: "dropboxFileContentsState",
   get:
     (filename) =>
-    async ({ get }) => {
+    ({ get }) => {
       const result = get(dropboxFileDownloadState(filename));
-      return readContentsOfBlob(result.fileBlob);
+      return result.fileBlobContents ?? readContentsOfBlob(result.fileBlob);
     },
 });
 export function useDropboxFileUpload(filename: string) {
@@ -323,10 +323,23 @@ export function useDropboxFileUpload(filename: string) {
             },
           });
           const response = await dbx.filesDownload({ path: filename });
-          const result = withBlob(response.result);
+          const blobResult = withBlob(response.result);
+          const fileBlobContents = await readContentsOfBlob(
+            blobResult.fileBlob,
+          );
+          const result = withFileBlobContents(blobResult, fileBlobContents);
           set(dropboxFileDownloadState(filename), result);
         }
       },
     [filename],
   );
+}
+
+function withFileBlobContents<T>(
+  t: T,
+  fileBlobContents: string | null,
+): T & { fileBlobContents: string | null } {
+  const result = t as T & { fileBlobContents: string | null };
+  result.fileBlobContents = fileBlobContents;
+  return result;
 }

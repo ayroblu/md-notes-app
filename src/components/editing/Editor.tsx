@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import {
   dropboxFileContentsState,
@@ -21,6 +21,8 @@ export function Editor() {
 }
 
 const LazyVimEditor = React.lazy(() => import("./VimEditor"));
+const LazyMonacoEditor = React.lazy(() => import("./MonacoEditor"));
+const isMonaco = true;
 
 type FileFoundEditorProps = {
   filename: string;
@@ -43,14 +45,25 @@ function FileFoundEditor({ filename }: FileFoundEditorProps) {
   if (!fileDetails) {
     return <div>File not found</div>;
   } else {
-    return (
-      <LazyVimEditor
-        filename={filename}
-        initialContents={editFile?.contents ?? fileDetails}
-        key={filename}
-        onEdit={onEdit}
-      />
-    );
+    if (isMonaco) {
+      return (
+        <LazyMonacoEditor
+          filename={filename}
+          initialContents={editFile?.contents ?? fileDetails}
+          key={filename}
+          onEdit={onEdit}
+        />
+      );
+    } else {
+      return (
+        <LazyVimEditor
+          filename={filename}
+          initialContents={editFile?.contents ?? fileDetails}
+          key={filename}
+          onEdit={onEdit}
+        />
+      );
+    }
   }
 }
 // <h3>Editor</h3>
