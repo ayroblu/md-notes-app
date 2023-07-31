@@ -50,6 +50,7 @@ export function MonacoEditor({ filename, initialContents, onEdit }: Props) {
       scrollbar: {
         vertical: "hidden",
         alwaysConsumeMouseWheel: false,
+        // Waiting for: https://github.com/microsoft/monaco-editor/issues/4108
       },
     });
     const throttledOnEdit = throttle(() => {
