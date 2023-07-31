@@ -31,9 +31,11 @@
 }
 .pane {
   width: var(--split-pane-width);
-  overflow: auto;
   position: relative;
   display: flex;
+}
+.scrollable {
+  overflow: auto;
 }
 .viewerPane {
   width: var(--viewer-pane-width);

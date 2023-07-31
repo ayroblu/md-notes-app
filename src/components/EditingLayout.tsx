@@ -48,7 +48,7 @@ export function EditingLayout() {
         </div>
       ) : (
         <>
-          <div className={styles.pane}>
+          <div className={cn(styles.pane, styles.scrollable)}>
             <ScrollMask
               containerRef={containerRef}
               direction="left"
@@ -64,9 +64,11 @@ export function EditingLayout() {
               direction="right"
               distance={cssConstants.tocWidth}
             />
-            <ErrorBoundary key={filename}>
-              <MarkdownViewer />
-            </ErrorBoundary>
+            <div className={styles.scrollable}>
+              <ErrorBoundary key={filename}>
+                <MarkdownViewer />
+              </ErrorBoundary>
+            </div>
           </div>
           <div className={styles.tableOfContents}>
             <ErrorBoundary key={filename}>
