@@ -48,7 +48,7 @@ export function EditingLayout() {
         </div>
       ) : (
         <>
-          <div className={cn(styles.pane, styles.scrollable)}>
+          <div className={cn(styles.pane, styles.scrollable, styles.nopadding)}>
             <ScrollMask
               containerRef={containerRef}
               direction="left"

@@ -37,6 +37,11 @@
 .scrollable {
   overflow: auto;
 }
+@supports (padding: max(0px)) {
+  .nopadding {
+    padding: 0;
+  }
+}
 .viewerPane {
   width: var(--viewer-pane-width);
 }

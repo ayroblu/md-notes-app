@@ -23,6 +23,12 @@
 @supports (padding: max(0px)) {
   :root {
     min-height: calc(100% + env(safe-area-inset-top));
+
+    /* https://stackoverflow.com/questions/47112393/getting-the-iphone-x-safe-area-using-javascript */
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
   }
 }
 /* https://www.falldowngoboone.com/blog/share-variables-between-javascript-and-css/ */

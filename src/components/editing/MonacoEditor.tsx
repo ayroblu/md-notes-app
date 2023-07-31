@@ -32,6 +32,18 @@ export function MonacoEditor({ filename, initialContents, onEdit }: Props) {
     //   value: "function hello() {\n\talert('Hello world!');\n}",
     //   language: "javascript",
     // });
+    const safeAreaTopStr = getComputedStyle(
+      document.documentElement,
+    ).getPropertyValue("--sat");
+    const safeAreaBottomStr = getComputedStyle(
+      document.documentElement,
+    ).getPropertyValue("--sab");
+    const safeAreaTopUnsafe = parseInt(safeAreaTopStr.slice(0, -2), 10);
+    const safeAreaBottomUnsafe = parseInt(safeAreaBottomStr.slice(0, -2), 10);
+    const safeAreaTop = isNaN(safeAreaTopUnsafe) ? 0 : safeAreaTopUnsafe;
+    const safeAreaBottom = isNaN(safeAreaBottomUnsafe)
+      ? 0
+      : safeAreaBottomUnsafe;
     const editor = monaco.editor.create(div, {
       model,
       // value: "",
@@ -52,6 +64,7 @@ export function MonacoEditor({ filename, initialContents, onEdit }: Props) {
         alwaysConsumeMouseWheel: false,
         // Waiting for: https://github.com/microsoft/monaco-editor/issues/4108
       },
+      padding: { top: safeAreaTop, bottom: safeAreaBottom },
     });
     const throttledOnEdit = throttle(() => {
       onEdit(model.getValue());
