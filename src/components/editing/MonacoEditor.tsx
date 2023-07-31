@@ -68,12 +68,10 @@ export function MonacoEditor({ filename, initialContents, onEdit }: Props) {
     });
     const throttledOnEdit = throttle(() => {
       onEdit(model.getValue());
-      editor.focus();
     }, 3000);
     model.onDidChangeContent(() => {
       throttledOnEdit();
     });
-    editor.focus();
     return () => {
       throttledOnEdit.dispose();
       editor.dispose();

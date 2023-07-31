@@ -58,13 +58,13 @@ export function EditingLayout() {
               <Editor />
             </ErrorBoundary>
           </div>
-          <div className={cn(styles.pane, styles.viewer)}>
+          <div className={cn(styles.pane, styles.viewer, styles.nopadding)}>
             <ScrollMask
               containerRef={containerRef}
               direction="right"
               distance={cssConstants.tocWidth}
             />
-            <div className={styles.scrollable}>
+            <div className={cn(styles.scrollable, styles.safePadding)}>
               <ErrorBoundary key={filename}>
                 <MarkdownViewer />
               </ErrorBoundary>

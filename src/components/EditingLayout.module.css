@@ -41,6 +41,10 @@
   .nopadding {
     padding: 0;
   }
+  .safePadding {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 .viewerPane {
   width: var(--viewer-pane-width);
